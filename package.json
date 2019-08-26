@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/znui/znui.git"
+    "url": "https://github.com/znui/znui-react.git"
   },
   "scripts": {
     "build": "webpack --uglify",
