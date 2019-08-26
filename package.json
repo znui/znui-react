@@ -1,0 +1,32 @@
+{
+  "name": "znui-react",
+  "version": "1.0.1",
+  "description": "znui react is the front-end basic framework.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/znui/znui.git"
+  },
+  "scripts": {
+    "build": "webpack --uglify",
+    "publish": "npm publish",
+    "unpublish": "npm unpublish"
+  },
+  "keywords": [
+    "front-end",
+    "web",
+    "ui",
+    "zeanium"
+  ],
+  "author": "yangyxu",
+  "email": "xuyy0618@qq.com",
+  "license": "MIT",
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "file-loader": "^4.2.0",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "url-loader": "^2.1.0",
+    "znui": "^1.1.2"
+  }
+}
