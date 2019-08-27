@@ -7,7 +7,8 @@ module.exports = {
     context: path.join(process.cwd(), 'src'),
     mode: process.env.NODE_ENV || 'production',
     entry: {
-        "znui-react": './znui.react.js'
+        "_default": './_default.js',
+        "_all": './_all.js'
     },
     output: {
         path: path.join(process.cwd(), 'dist'),
