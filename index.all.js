@@ -1,2 +1,10 @@
-require('./dist/_all.css');
-module.exports = require('./dist/_all.js');
+if(!window.zn){
+    require('@zeanium/core');
+    require('@zeanium/web');
+}
+
+if(!window.znui){
+    require('znui');
+}
+
+module.exports = require('./index.js');

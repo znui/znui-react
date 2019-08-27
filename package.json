@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "znui react is the front-end basic framework.",
   "main": "index.js",
   "repository": {
@@ -8,7 +8,11 @@
     "url": "https://github.com/znui/znui-react.git"
   },
   "scripts": {
-    "build": "webpack --uglify",
+    "clean": "rimraf dist && rimraf build",
+    "release": "npm run clean && babel src -d build && webpack --uglify",
+    "build": "rimraf build && babel src -d build",
+    "webpack": "rimraf dist && webpack",
+    "dist": "rimraf dist && webpack --uglify",
     "publish": "npm publish",
     "unpublish": "npm unpublish"
   },

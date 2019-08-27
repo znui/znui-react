@@ -2,22 +2,36 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var optimizeCss = require('optimize-css-assets-webpack-plugin');
 var path = require('path');
+var argv = process.argv;
+var uglifyIndex = argv.indexOf('--uglify'),
+    minimizer = [];
+
+if(uglifyIndex!=-1){
+    minimizer.push(new UglifyJsPlugin({
+        uglifyOptions: {
+            compress: false
+        }
+    }));
+    minimizer.push(new optimizeCss({ }));
+}
 
 module.exports = {
     context: path.join(process.cwd(), 'src'),
     mode: process.env.NODE_ENV || 'production',
     entry: {
-        "_default": './_default.js',
-        "_all": './_all.js'
-    },
-    output: {
-        path: path.join(process.cwd(), 'dist'),
-        filename: '[name].js',
-        chunkFilename: '[name].js'
+        "znui.react": './znui.react.js'
     },
     externals: {
         "react": "React",
         "react-dom": "ReactDOM"
+    },
+    output: {
+        path: path.join(process.cwd(), 'dist'),
+        //chunkFilename: '[name].js',
+        filename: '[name].js',
+        //library: "friendly",
+        libraryTarget: "this"
+        //libraryExport: "default"
     },
     module: {
         // Disable handling of unknown requires
@@ -85,13 +99,6 @@ module.exports = {
         hints: process.env.NODE_ENV === 'production' ? "warning" : false
     },
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    compress: false
-                }
-            }),
-            new optimizeCss({ })
-        ]
+        minimizer: minimizer
     }
 };

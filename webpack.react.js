@@ -17,6 +17,19 @@ var _overwrite = function (target){
     return _target;
 }
 
+var argv = process.argv;
+var uglifyIndex = argv.indexOf('--uglify'),
+    minimizer = [];
+
+if(uglifyIndex!=-1){
+    minimizer.push(new UglifyJsPlugin({
+        uglifyOptions: {
+            compress: false
+        }
+    }));
+    minimizer.push(new optimizeCss({ }));
+}
+
 module.exports = _overwrite({
     context: path.join(process.cwd(), 'src'),
     mode: process.env.NODE_ENV || 'production',
@@ -98,13 +111,6 @@ module.exports = _overwrite({
         hints: process.env.NODE_ENV === 'production' ? "warning" : false
     },
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    compress: false
-                }
-            }),
-            new optimizeCss({ })
-        ]
+        minimizer: minimizer
     }
 }, config);
