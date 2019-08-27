@@ -7,4 +7,5 @@ if(!window.znui){
     require('znui');
 }
 
-module.exports = require('./build/znui.react.js');
+require('./dist/znui-react-css.css');
+module.exports = require('./build/js/znui.react.js');

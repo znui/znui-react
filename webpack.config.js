@@ -19,7 +19,8 @@ module.exports = {
     context: path.join(process.cwd(), 'src'),
     mode: process.env.NODE_ENV || 'production',
     entry: {
-        "znui.react": './znui.react.js'
+        "znui-react-css": './style/znui.react.js',
+        "znui-react-js": './js/znui.react.js',
     },
     externals: {
         "react": "React",

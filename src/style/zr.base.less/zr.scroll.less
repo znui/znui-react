@@ -1,0 +1,65 @@
+
+*::-webkit-scrollbar{
+    height: 6px;
+    width: 6px;
+}
+*::-webkit-scrollbar-thumb{
+    background: rgba(96, 107, 136, 0.6);
+}
+
+
+.zr-scroll-webkit{
+    overflow: auto;
+}
+.zr-scroll-webkit::-webkit-scrollbar{
+    width: 5px;
+    height:8px;
+    margin-right: 2px;
+}
+.zr-scroll-webkit::-webkit-scrollbar-thumb{
+    background: #ACAFA8;
+    border-radius: 5px;
+    width: 5px;
+    height:8px;
+    overflow: hidden;
+}
+.zr-scroll-webkit::-webkit-scrollbar-thumb:hover{
+    background: #7B7C77;
+    overflow: auto;
+}
+.zr-scroll-webkit::-webkit-scrollbar-thumb:active{
+    background: #4B4A45;
+    overflow: auto;
+}
+
+.zr-scroll-normal::-webkit-scrollbar-track{
+    background: rgba(0,0,0,.1);
+}
+.zr-scroll-normal::-webkit-scrollbar-thumb{
+    background: rgba(0,0,0,.3);
+}
+.zr-scroll-normal::-webkit-scrollbar-thumb:hover{
+    background: #7B7C77;
+    overflow: auto;
+}
+.zr-scroll-normal::-webkit-scrollbar-thumb:active{
+    background: #4B4A45;
+    overflow: auto;
+}
+
+.zr-scroll-apple::-webkit-scrollbar{
+	width:8px;
+	height: 8px;
+	margin-right:1px;
+	border-width:0;
+	border-color:#999;
+}
+.zr-scroll-apple::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+.zr-scroll-apple::-webkit-scrollbar-thumb{
+	background:rgba(0,0,0,.2);
+	border-radius:8px;
+}

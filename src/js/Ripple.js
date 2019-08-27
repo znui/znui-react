@@ -1,4 +1,3 @@
-require('./Ripple.less');
 module.exports = zn.Class({
     methods: {
         init: function (){
