@@ -1,11 +1,5 @@
 "use strict";
 
-var React = require('react');
-
-if (React && !React.createClass) {
-  React.createClass = require('create-react-class');
-}
-
 module.exports = znui.react = {
   Application: require('./Application'),
   Ripple: require('./Ripple'),
