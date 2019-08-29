@@ -1,16 +1,18 @@
 module.exports = znui.react = {
     Application: require('./Application'),
     Ripple: require('./Ripple'),
-    getReact: function (){
-        var React = require('react');
-        if(React && !React.createClass){
-            React.createClass = require('create-react-class');
+    fixCreateReactClass: function (React, createClass){
+        if(React && createClass){
+            if(React && !React.createClass){
+                React.createClass = createClass;
+            }
         }
-
+        
         return React;
     },
     createClass: function (argv){
-        return require('create-react-class').call(this.getReact, argv);
+        var createClass = require('create-react-class');
+        return createClass(argv);
     },
     classname: function (){
         return znui.classname.apply(this, Array.prototype.slice.call(arguments));
