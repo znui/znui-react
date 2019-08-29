@@ -10,7 +10,29 @@ module.exports = znui.react = {
       }
     }
 
+    this.React = React;
     return React;
+  },
+  createClass: function createClass(argv) {
+    if (this.React) {
+      return this.React.createClass(argv);
+    } else {
+      var React = require('react');
+
+      if (React) {
+        if (!React.createClass) {
+          React.createClass = require('create-react-class');
+        }
+
+        if (React.createClass) {
+          return React.createClass(argv);
+        } else {
+          throw new Error('create-react-class is not exist.');
+        }
+      } else {
+        throw new Error('react is not exist.');
+      }
+    }
   },
   classname: function classname() {
     return znui.classname.apply(this, Array.prototype.slice.call(arguments));
