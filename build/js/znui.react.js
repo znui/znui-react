@@ -15,7 +15,7 @@ module.exports = znui.react = {
   },
   createClass: function createClass(argv) {
     if (this.React) {
-      return this.React.createClass(argv);
+      return this.React.createClass.call(this.React, argv);
     } else {
       var React = require('react');
 
@@ -25,7 +25,7 @@ module.exports = znui.react = {
         }
 
         if (React.createClass) {
-          return React.createClass(argv);
+          return React.createClass.call(React, argv);
         } else {
           throw new Error('create-react-class is not exist.');
         }
