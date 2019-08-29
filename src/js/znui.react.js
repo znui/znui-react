@@ -10,10 +10,6 @@ module.exports = znui.react = {
         
         return React;
     },
-    createClass: function (argv){
-        var createClass = require('create-react-class');
-        return createClass(argv);
-    },
     classname: function (){
         return znui.classname.apply(this, Array.prototype.slice.call(arguments));
     },
