@@ -2,7 +2,6 @@
 
 module.exports = znui.react = {
   Application: require('./Application'),
-  Ripple: require('./Ripple'),
   fixCreateReactClass: function fixCreateReactClass(React, createClass) {
     if (React && createClass) {
       if (React && !React.createClass) {
