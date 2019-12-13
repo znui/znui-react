@@ -1,5 +1,19 @@
 module.exports = znui.react = {
     Application: require('./Application'),
+    config: {
+        set: function (key, value){
+            return this["__" + key + "__"] = value, this;
+        },
+        sets: function (sets){
+            for(var key in sets){
+                this.set(key, sets[key]);
+            }
+            return this;
+        },
+        get: function (key){
+            return this["__" + key + "__"];
+        }
+    },
     fixCreateReactClass: function (React, createClass){
         if(React && createClass){
             if(React && !React.createClass){
