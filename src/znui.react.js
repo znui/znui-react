@@ -24,20 +24,28 @@ module.exports = znui.react = {
         this.React = React;
         return React;
     },
+    fixReactCreateClass: function (react){
+        var React = react || require('react');
+        if(React){
+            if(!React.createClass){
+                React.createClass = require('create-react-class');
+            }
+            if(React.createClass){
+                return React;
+            }else{
+                throw new Error('create-react-class is not exist.');
+            }
+        } else {
+            throw new Error('react is not exist.');
+        }
+    },
     createClass: function (argv){
         if (this.React) {
             return this.React.createClass.call(this.React, argv);
         } else {
-            var React = require('react');
-            if(React){
-                if(!React.createClass){
-                    React.createClass = require('create-react-class');
-                }
-                if(React.createClass){
-                    return React.createClass.call(React, argv);
-                }else{
-                    throw new Error('create-react-class is not exist.');
-                }
+            var React = this.fixReactCreateClass();
+            if(React && React.createClass){
+                return React.createClass.call(React, argv);
             } else {
                 throw new Error('react is not exist.');
             }

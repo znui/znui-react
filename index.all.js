@@ -6,5 +6,4 @@ if(!window.zn){
 if(!window.znui){
     require('znui');
 }
-
 module.exports = require('./index.js');
