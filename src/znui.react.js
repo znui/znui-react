@@ -20,9 +20,8 @@ module.exports = znui.react = {
                 React.createClass = createClass;
             }
         }
-        
-        this.React = React;
-        return React;
+
+        return znui.React = React, React;
     },
     fixReactCreateClass: function (react){
         var React = react || require('react');
@@ -31,7 +30,7 @@ module.exports = znui.react = {
                 React.createClass = require('create-react-class');
             }
             if(React.createClass){
-                return React;
+                return znui.React = React, React;
             }else{
                 throw new Error('create-react-class is not exist.');
             }
@@ -40,10 +39,12 @@ module.exports = znui.react = {
         }
     },
     createClass: function (argv){
-        if (this.React) {
-            return this.React.createClass.call(this.React, argv);
+        if (znui.React) {
+            return znui.React.createClass.call(znui.React, argv);
         } else {
             var React = this.fixReactCreateClass();
+            znui.React = React;
+
             if(React && React.createClass){
                 return React.createClass.call(React, argv);
             } else {
