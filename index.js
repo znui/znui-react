@@ -1,3 +1,1 @@
-var _export = require('./dist/znui.react.js');
-_export.fixReactCreateClass();
-module.exports = _export;
+module.exports = require('./dist/znui.react.js');
