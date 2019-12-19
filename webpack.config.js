@@ -23,7 +23,10 @@ module.exports = {
     },
     externals: {
         "react": "React",
-        "react-dom": "ReactDOM"
+        "react-dom": "ReactDOM",
+        "@zeanium/core": "zn",
+        "@zeanium/web": "zn",
+        "znui": "znui"
     },
     output: {
         path: path.join(process.cwd(), 'dist'),

@@ -1,11 +1,4 @@
-if(!window.zn){
-    require('@zeanium/core');
-    require('@zeanium/web');
-}
-
-if(!window.znui){
-    require('znui');
-}
-
-require('./dist/znui-react-css.css');
-module.exports = require('./build/js/znui.react.js');
+require('@zeanium/core');
+require('@zeanium/web');
+require('znui');
+module.exports = require('./build/znui.react.js');
