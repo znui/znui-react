@@ -1,5 +1,14 @@
 "use strict";
 
+var React = require('react');
+
+var createClass = require('create-react-class');
+
+if (React && createClass && !React.createClass) {
+  React.createClass = createClass;
+}
+
+znui.React = React;
 module.exports = znui.react = {
   Application: require('./Application'),
   config: {
@@ -18,20 +27,18 @@ module.exports = znui.react = {
     }
   },
   fixCreateReactClass: function fixCreateReactClass(React, createClass) {
-    if (React && createClass) {
-      if (React && !React.createClass) {
-        React.createClass = createClass;
-      }
+    if (React && createClass && !React.createClass) {
+      React.createClass = createClass;
     }
 
     return znui.React = React, React;
   },
   fixReactCreateClass: function fixReactCreateClass(react) {
-    var React = react || require('react');
+    var React = react || React;
 
     if (React) {
       if (!React.createClass) {
-        React.createClass = require('create-react-class');
+        React.createClass = createClass;
       }
 
       if (React.createClass) {
@@ -47,13 +54,10 @@ module.exports = znui.react = {
     if (znui.React) {
       return znui.React.createClass.call(znui.React, argv);
     } else {
-      var React = this.fixReactCreateClass();
-      znui.React = React;
-
       if (React && React.createClass) {
         return React.createClass.call(React, argv);
       } else {
-        throw new Error('react is not exist.');
+        throw new Error('react or createClass is not exist.');
       }
     }
   },
