@@ -1,8 +1,8 @@
 {
   "name": "znui-react",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "znui react is the front-end basic framework.",
-  "main": "production.js",
+  "main": "development.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/znui/znui-react.git"
