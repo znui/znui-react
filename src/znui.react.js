@@ -1,17 +1,12 @@
-if(!znui){
-    require('znui');
+require('znui');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var createClass = require('create-react-class');
+if(React && createClass && !React.createClass){
+    React.createClass = createClass;
 }
-
-if(!znui.React && !znui.ReactDOM){
-    var React = require('react');
-    var ReactDOM = require('react-dom');
-    var createClass = require('create-react-class');
-    if(React && createClass && !React.createClass){
-        React.createClass = createClass;
-    }
-    znui.React = React;
-    znui.ReactDOM = ReactDOM;
-}
+znui.React = React;
+znui.ReactDOM = ReactDOM;
 
 module.exports = znui.react = {
     Application: require('./Application'),
