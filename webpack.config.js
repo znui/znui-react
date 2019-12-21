@@ -24,8 +24,6 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
-        "@zeanium/core": "zn",
-        "@zeanium/web": "zn",
         "znui": "znui"
     },
     output: {

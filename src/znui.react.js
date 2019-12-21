@@ -1,7 +1,3 @@
-if(!zn){
-    require('@zeanium/core');
-    require('@zeanium/web');
-}
 if(!znui){
     require('znui');
 }
@@ -16,6 +12,7 @@ if(!znui.React && !znui.ReactDOM){
     znui.React = React;
     znui.ReactDOM = ReactDOM;
 }
+
 module.exports = znui.react = {
     Application: require('./Application'),
     config: {
