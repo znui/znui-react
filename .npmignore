@@ -5,6 +5,7 @@ node_modules/*
 src/*
 .babelrc
 .gitignore
+.npmignore
 package-lock.json
 webpack.config.js
 webpack.initial.js
