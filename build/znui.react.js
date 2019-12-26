@@ -14,11 +14,14 @@ if (React && createClass && !React.createClass) {
 
 znui.React = React;
 znui.ReactDOM = ReactDOM;
+znui.axios = zn.data.zncaller = require('axios');
 module.exports = znui.react = {
   Application: require('./Application'),
+  DataViewer: require('./DataViewer'),
   config: {
+    __zr__: {},
     set: function set(key, value) {
-      return this["__" + key + "__"] = value, this;
+      return this.__zr__["__" + key + "__"] = value, this;
     },
     sets: function sets(_sets) {
       for (var key in _sets) {
@@ -28,7 +31,7 @@ module.exports = znui.react = {
       return this;
     },
     get: function get(key) {
-      return this["__" + key + "__"];
+      return this.__zr__["__" + key + "__"];
     }
   },
   fixCreateReactClass: function fixCreateReactClass(React, createClass) {
