@@ -29,8 +29,7 @@ module.exports = React.createClass({
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      this.state.data.set('argv', nextProps.data);
-      this.state.data.refresh();
+      this.state.data.overwriteCall(nextProps.data);
     }
   },
   __itemRender: function __itemRender(item, index) {
@@ -41,6 +40,8 @@ module.exports = React.createClass({
 
     if (_data && _data.length) {
       return React.createElement(React.Fragment, null, _data.map(this.__itemRender));
+    } else {
+      return React.createElement(React.Fragment, null);
     }
   }
 });

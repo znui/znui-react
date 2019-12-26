@@ -27,8 +27,7 @@ module.exports = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		if(nextProps.data!==this.props.data){
-			this.state.data.set('argv', nextProps.data);
-			this.state.data.refresh();
+			this.state.data.overwriteCall(nextProps.data);
 		}
 	},
 	__itemRender: function (item, index){
@@ -44,7 +43,8 @@ module.exports = React.createClass({
 					}
 				</>
 			);
+		}else{
+			return <></>;
 		}
-		
 	}
 });
