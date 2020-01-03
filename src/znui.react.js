@@ -51,6 +51,31 @@ module.exports = znui.react = {
             throw new Error('react is not exist.');
         }
     },
+    generateRegister: function (entity){
+        if(entity){
+            entity.__data__ = {};
+            entity.setKeyValue = function (key, value){
+                return entity.__data__[key] = value, entity;
+            };
+            entity.getKey = function (key){
+                return entity.__data__[key];
+            }
+        }
+
+        return this;
+    },
+    destroyRegister: function (entity){
+        if(entity){
+            entity.__data__ = null;
+            delete entity.__data__;
+            entity.setKeyValue = null;
+            delete entity.setKeyValue;
+            entity.getKey = null;
+            delete entity.getKey;
+        }
+
+        return this;
+    },
     createClass: function (argv){
         if (znui.React) {
             return znui.React.createClass.call(znui.React, argv);
