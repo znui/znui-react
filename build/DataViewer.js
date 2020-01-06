@@ -11,7 +11,9 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
-    var _events = this.props.events || {};
+    var _events = this.props.events || {},
+        _before = _events.before,
+        _after = _events.after;
 
     this.state.data = zn.data.create(this.props.data, zn.extend(_events, {
       before: function (sender, data) {
@@ -19,7 +21,7 @@ module.exports = React.createClass({
           loading: true
         });
         this.props.onLoading && this.props.onLoading(data, this);
-        _events.before && _events.before(sender, data);
+        _before && _before(sender, data);
       }.bind(this),
       after: function (sender, data) {
         this.setState({
@@ -27,7 +29,7 @@ module.exports = React.createClass({
           data: data
         });
         this.props.onFinished && this.props.onFinished(data, this);
-        _events.after && _events.after(sender, data);
+        _after && _after(sender, data);
       }.bind(this)
     }), this.props.context);
   },

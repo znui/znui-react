@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "znui react is the front-end basic framework.",
   "main": "development.js",
   "repository": {
