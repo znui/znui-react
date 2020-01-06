@@ -65,8 +65,9 @@ module.exports = React.createClass({
 			if(_return) {
 				return _return;
 			}
-
-			return <></>;
+			
 		}
+
+		return <></>;
 	}
 });

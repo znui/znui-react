@@ -66,8 +66,8 @@ module.exports = React.createClass({
       if (_return) {
         return _return;
       }
-
-      return React.createElement(React.Fragment, null);
     }
+
+    return React.createElement(React.Fragment, null);
   }
 });
