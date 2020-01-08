@@ -1,4 +1,3 @@
-require('znui');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var createClass = require('create-react-class');
@@ -11,7 +10,7 @@ znui.axios = zn.data.zncaller = require('axios');
 
 module.exports = znui.react = {
     Application: require('./Application'),
-    DataViewer: require('./DataViewer'),
+    DataView: require('./DataView'),
     config: {
         __zr__: {
             

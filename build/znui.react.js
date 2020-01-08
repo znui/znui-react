@@ -1,7 +1,5 @@
 "use strict";
 
-require('znui');
-
 var React = require('react');
 
 var ReactDOM = require('react-dom');
@@ -17,7 +15,7 @@ znui.ReactDOM = ReactDOM;
 znui.axios = zn.data.zncaller = require('axios');
 module.exports = znui.react = {
   Application: require('./Application'),
-  DataViewer: require('./DataViewer'),
+  DataView: require('./DataView'),
   config: {
     __zr__: {},
     set: function set(key, value) {

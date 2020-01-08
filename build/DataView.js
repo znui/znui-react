@@ -2,8 +2,8 @@
 
 var React = znui.React || require('react');
 
-module.exports = React.createClass({
-  displayName: 'DataViewer',
+var ZRDataView = React.createClass({
+  displayName: 'ZRDataView',
   getInitialState: function getInitialState() {
     return {
       data: null,
@@ -47,9 +47,11 @@ module.exports = React.createClass({
     if (this.state.loading) {
       var _return = this.props.loadingRender && this.props.loadingRender(this);
 
-      if (_return) {
-        return _return;
+      if (_return === null) {
+        _return = ZRDataView.loadingRender || React.createElement(React.Fragment, null);
       }
+
+      return _return;
     }
 
     if (_data && _data.length) {
@@ -71,3 +73,5 @@ module.exports = React.createClass({
     return React.createElement(React.Fragment, null);
   }
 });
+ZRDataView.loadingRender = null;
+module.exports = ZRDataView;
