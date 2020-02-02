@@ -56,15 +56,43 @@ module.exports = znui.react = {
       throw new Error('react is not exist.');
     }
   },
-  generateRegister: function generateRegister(entity) {
+  generateGlobalRegister: function generateGlobalRegister(key) {
+    if (this[key]) {
+      throw new Error('znui.react.' + key + ' is exist.');
+    }
+
+    this[key] = zn.Class({
+      "static": true,
+      properties: {},
+      methods: {
+        init: function init() {
+          this.__data__ = {};
+        },
+        register: function register(key, value) {
+          this.__data__[key] = value;
+        },
+        resolve: function resolve(key) {
+          return this.__data__[key];
+        },
+        inputs: function inputs() {
+          return this.__data__;
+        },
+        keys: function keys() {
+          return Object.keys(this.__data__);
+        }
+      }
+    });
+    return this[key];
+  },
+  initRegister: function initRegister(entity) {
     if (entity) {
       entity.__data__ = {};
 
-      entity.setKeyValue = function (key, value) {
+      entity.register = function (key, value) {
         return entity.__data__[key] = value, entity;
       };
 
-      entity.getKey = function (key) {
+      entity.resolve = function (key) {
         return entity.__data__[key];
       };
     }
@@ -75,10 +103,10 @@ module.exports = znui.react = {
     if (entity) {
       entity.__data__ = null;
       delete entity.__data__;
-      entity.setKeyValue = null;
-      delete entity.setKeyValue;
-      entity.getKey = null;
-      delete entity.getKey;
+      entity.register = null;
+      delete entity.register;
+      entity.resolve = null;
+      delete entity.resolve;
     }
 
     return this;
