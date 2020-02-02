@@ -12,11 +12,11 @@ module.exports = znui.react = {
     Application: require('./Application'),
     DataView: require('./DataView'),
     config: {
-        __zr__: {
+        _zr_: {
             
         },
         set: function (key, value){
-            return this.__zr__["__" + key + "__"] = value, this;
+            return this._zr_["_" + key + "_"] = value, this;
         },
         sets: function (sets){
             for(var key in sets){
@@ -25,7 +25,7 @@ module.exports = znui.react = {
             return this;
         },
         get: function (key){
-            return this.__zr__["__" + key + "__"];
+            return this._zr_["_" + key + "_"];
         }
     },
     fixCreateReactClass: function (React, createClass){
@@ -54,14 +54,19 @@ module.exports = znui.react = {
         if(this[key]) {
             throw new Error('znui.react.' + key + ' is exist.');
         }
-        var _args = args || { enableDisplayName: true };
+        var _args = zn.extend({ enableDisplayName: true }, args);
         var _component = zn.Class({
             static: true,
-            properties: {},
+            properties: {
+                _isZNStaticObject_: true
+            },
             methods: {
                 init: function (){
-                    this.__components__ = components || {};
-                    this.__config__ = {};
+                    this._components_ =  _args.components || {};
+                    this._config_ = {};
+                },
+                isZNStaticObject: function (){
+                    return true;
                 },
                 register: function (){
                     var _argv = arguments,
@@ -72,6 +77,9 @@ module.exports = znui.react = {
                     if(_len==1){
                         _value = _argv[0];
                         _key = _value.displayName;
+                        if(zn.is(_value, 'object')){
+                            return this.registers(_value);
+                        }
                     }else{
                         _value = _argv[0];
                         _key = _argv[1];
@@ -84,40 +92,51 @@ module.exports = znui.react = {
                         throw new Error('The key ' + _key + " is exist.");
                     }
 
-                    this.__components__[_key] = _value;
+                    this._components_[_key] = _value;
                     this[_key] = _value;
 
                     return this;
                 },
                 registers: function (data){
+                    var _data = {};
                     if(zn.is(data, 'array')){
                         data.forEach(function (item){
+                            if(item.displayName){
+                                _data[item.displayName] = item;
+                            }
                             this.register(item);
                         }.bind(this));
                     } else if(zn.is(data, 'object')){
                         for(var key in data) {
+                            _data[key] = data[key];
                             this.register(data[key], key);
                         }
                     } else if(zn.is(data, 'function')){
                         this.register(data.call());
                     }
 
-                    return this;
+                    return _data;
                 },
                 resolve: function (key){
-                    return this.__components__[key];
+                    return this._components_[key];
                 },
                 setConfig: function (key, value){
-                    return this.__config__[key] = value;
+                    return this._config_[key] = value;
                 },
                 getConfig: function (key){
-                    return this.__config__[key];
+                    return this._config_[key];
                 },
                 components: function (){
-                    return this.__components__;
+                    return this._components_;
+                },
+                size: function (){
+                    return Object.keys(this._components_).length;
+                },
+                contain: function (key){
+                    return Object.keys(this._components_).indexOf(key) != -1;
                 },
                 keys: function (){
-                    return Object.keys(this.__components__);
+                    return Object.keys(this._components_);
                 }
             }
         });
@@ -126,12 +145,12 @@ module.exports = znui.react = {
     },
     initRegister: function (entity){
         if(entity){
-            entity.__data__ = {};
+            entity._data_ = {};
             entity.register = function (key, value){
-                return entity.__data__[key] = value, entity;
+                return entity._data_[key] = value, entity;
             };
             entity.resolve = function (key){
-                return entity.__data__[key];
+                return entity._data_[key];
             }
         }
 
@@ -139,8 +158,8 @@ module.exports = znui.react = {
     },
     destroyRegister: function (entity){
         if(entity){
-            entity.__data__ = null;
-            delete entity.__data__;
+            entity._data_ = null;
+            delete entity._data_;
             entity.register = null;
             delete entity.register;
             entity.resolve = null;
