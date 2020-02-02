@@ -74,6 +74,7 @@ module.exports = znui.react = {
         init: function init() {
           this._components_ = _args.components || {};
           this._config_ = {};
+          this._objects_ = [];
         },
         isZNStaticObject: function isZNStaticObject() {
           return true;
@@ -94,10 +95,6 @@ module.exports = znui.react = {
           } else {
             _value = _argv[0];
             _key = _argv[1];
-
-            if (_args.enableDisplayName) {
-              _key = _value.displayName;
-            }
           }
 
           if (this[_key]) {
@@ -106,7 +103,13 @@ module.exports = znui.react = {
 
           this._components_[_key] = _value;
           this[_key] = _value;
-          return this;
+
+          if (_args.enableDisplayName && _value.displayName) {
+            this._components_[_value.displayName] = _value;
+            this[_value.displayName] = _value;
+          }
+
+          return this._objects_.push(_value), _value;
         },
         registers: function registers(data) {
           var _data = {};
@@ -142,8 +145,11 @@ module.exports = znui.react = {
         components: function components() {
           return this._components_;
         },
+        objects: function objects() {
+          return this._objects_;
+        },
         size: function size() {
-          return Object.keys(this._components_).length;
+          return this._objects_.length;
         },
         contain: function contain(key) {
           return Object.keys(this._components_).indexOf(key) != -1;

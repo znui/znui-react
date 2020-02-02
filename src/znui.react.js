@@ -54,7 +54,10 @@ module.exports = znui.react = {
         if(this[key]) {
             throw new Error('znui.react.' + key + ' is exist.');
         }
-        var _args = zn.extend({ enableDisplayName: true }, args);
+        var _args = zn.extend({ 
+            enableDisplayName: true 
+        }, args);
+
         var _component = zn.Class({
             static: true,
             properties: {
@@ -64,6 +67,7 @@ module.exports = znui.react = {
                 init: function (){
                     this._components_ =  _args.components || {};
                     this._config_ = {};
+                    this._objects_ = [];
                 },
                 isZNStaticObject: function (){
                     return true;
@@ -83,9 +87,7 @@ module.exports = znui.react = {
                     }else{
                         _value = _argv[0];
                         _key = _argv[1];
-                        if(_args.enableDisplayName){
-                            _key = _value.displayName;
-                        }
+                        
                     }
 
                     if(this[_key]){
@@ -95,7 +97,12 @@ module.exports = znui.react = {
                     this._components_[_key] = _value;
                     this[_key] = _value;
 
-                    return this;
+                    if(_args.enableDisplayName && _value.displayName){
+                        this._components_[_value.displayName] = _value;
+                        this[_value.displayName] = _value;
+                    }
+
+                    return this._objects_.push(_value), _value;
                 },
                 registers: function (data){
                     var _data = {};
@@ -129,8 +136,11 @@ module.exports = znui.react = {
                 components: function (){
                     return this._components_;
                 },
+                objects: function (){
+                    return this._objects_;
+                },
                 size: function (){
-                    return Object.keys(this._components_).length;
+                    return this._objects_.length;
                 },
                 contain: function (key){
                     return Object.keys(this._components_).indexOf(key) != -1;
