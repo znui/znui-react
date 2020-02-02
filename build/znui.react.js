@@ -56,33 +56,83 @@ module.exports = znui.react = {
       throw new Error('react is not exist.');
     }
   },
-  generateGlobalRegister: function generateGlobalRegister(key) {
+  registerComponent: function registerComponent(key, args) {
     if (this[key]) {
       throw new Error('znui.react.' + key + ' is exist.');
     }
 
-    this[key] = zn.Class({
+    var _args = args || {
+      enableDisplayName: true
+    };
+
+    var _component = zn.Class({
       "static": true,
       properties: {},
       methods: {
         init: function init() {
-          this.__data__ = {};
+          this.__components__ = components || {};
+          this.__config__ = {};
         },
-        register: function register(key, value) {
-          this.__data__[key] = value;
+        register: function register() {
+          var _argv = arguments,
+              _len = _argv.length,
+              _key = null,
+              _value = null;
+
+          if (_len == 1) {
+            _value = _argv[0];
+            _key = _value.displayName;
+          } else {
+            _value = _argv[0];
+            _key = _argv[1];
+
+            if (_args.enableDisplayName) {
+              _key = _value.displayName;
+            }
+          }
+
+          if (this[_key]) {
+            throw new Error('The key ' + _key + " is exist.");
+          }
+
+          this.__components__[_key] = _value;
+          this[_key] = _value;
+          return this;
+        },
+        registers: function registers(data) {
+          if (zn.is(data, 'array')) {
+            data.forEach(function (item) {
+              this.register(item);
+            }.bind(this));
+          } else if (zn.is(data, 'object')) {
+            for (var key in data) {
+              this.register(data[key], key);
+            }
+          } else if (zn.is(data, 'function')) {
+            this.register(data.call());
+          }
+
+          return this;
         },
         resolve: function resolve(key) {
-          return this.__data__[key];
+          return this.__components__[key];
         },
-        inputs: function inputs() {
-          return this.__data__;
+        setConfig: function setConfig(key, value) {
+          return this.__config__[key] = value;
+        },
+        getConfig: function getConfig(key) {
+          return this.__config__[key];
+        },
+        components: function components() {
+          return this.__components__;
         },
         keys: function keys() {
-          return Object.keys(this.__data__);
+          return Object.keys(this.__components__);
         }
       }
     });
-    return this[key];
+
+    return this[key] = _component, _component;
   },
   initRegister: function initRegister(entity) {
     if (entity) {
