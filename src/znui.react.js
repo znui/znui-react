@@ -1,16 +1,24 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var createClass = require('create-react-class');
+var Application = require('./Application');
 if(React && createClass && !React.createClass){
     React.createClass = createClass;
 }
 znui.React = React;
 znui.ReactDOM = ReactDOM;
+znui.require = require;
 znui.axios = zn.data.zncaller = require('axios');
 
+
 module.exports = znui.react = {
-    Application: require('./Application'),
+    Application: Application,
     DataView: require('./DataView'),
+    Session: require('./Session'),
+    Storage: require('./Storage'),
+    createApplication: function (args){
+        return new Application(args);
+    },
     config: {
         _zr_: {
             
@@ -55,7 +63,7 @@ module.exports = znui.react = {
             throw new Error('znui.react.' + key + ' is exist.');
         }
         var _args = zn.extend({ 
-            enableDisplayName: true 
+            enableDisplayName: true
         }, args);
 
         var _component = zn.Class({

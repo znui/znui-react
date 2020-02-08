@@ -6,16 +6,24 @@ var ReactDOM = require('react-dom');
 
 var createClass = require('create-react-class');
 
+var Application = require('./Application');
+
 if (React && createClass && !React.createClass) {
   React.createClass = createClass;
 }
 
 znui.React = React;
 znui.ReactDOM = ReactDOM;
+znui.require = require;
 znui.axios = zn.data.zncaller = require('axios');
 module.exports = znui.react = {
-  Application: require('./Application'),
+  Application: Application,
   DataView: require('./DataView'),
+  Session: require('./Session'),
+  Storage: require('./Storage'),
+  createApplication: function createApplication(args) {
+    return new Application(args);
+  },
   config: {
     _zr_: {},
     set: function set(key, value) {

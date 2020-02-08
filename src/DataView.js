@@ -30,11 +30,6 @@ var ZRDataView = React.createClass({
 			}.bind(this)
 		}), this.props.context);
 	},
-	componentWillReceiveProps: function(nextProps){
-		if(nextProps.data!==this.props.data){
-			this.state.data.overwriteCall(nextProps.data);
-		}
-	},
 	__itemRender: function (item, index){
 		return this.props.itemRender && this.props.itemRender(item, index);
 	},

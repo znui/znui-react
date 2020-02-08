@@ -1,123 +1,110 @@
+var React = znui.React || require('react');
+var ReactDOM = znui.ReactDOM || require('react-dom');
+var Session = require('./Session.js');
+var Storage = require('./Storage.js');
 module.exports = zn.Class({
-    statics: {
-        create: function (argv){
-            var _props = {},
-                _methods = {
-                    init: function (argv){
-                        this.super(argv);
-                        this.sets(argv);
-                    }
-                };
-            zn.each(argv, function (value, key){
-                if(zn.type(value)=='function' && !value.displayName){
-                    _methods[key] = value;
-                }else {
-                    _props[key] = value;
-                }
-            });
-            var _Class = zn.Class(this, {
-                methods: _methods,
-                properties: _props
-            });
-
-            return new _Class(_props);
-        }
-    },
+    events: ['init', 'update', 'render'],
     properties: {
         container: 'container',
-        absolute: true,
-        home: null,
-        main: null,
-        host: window.location.origin,
-        router: null,
-        global: null,
-        plugins: []
+        delay: 0,
+        session: null,
+        storage: null,
+        render: null,
+        globalRender: null
     },
     methods: {
         init: function (argv){
+            argv = zn.extend({}, argv);
             this.sets(argv);
-            this.__initArgv(argv);
-            var _value = this.onInit && this.onInit.call(this, this.gets());
-            if(_value!==false){
+            this._storage = new Storage(argv.storage);
+            var _value = this.fire('init', argv);
+            if(_value !== false){
                 this.update(_value);
             }
         },
-        __initArgv: function (argv){
-            var _routers = {},
-                _relativeRouters = {},
-                _plugin = null,
-                _path = this.get('path'),
-                _self = this;
-
-            this.get('plugins') && this.get('plugins').forEach(function (plugin){
-                if(zn.is(plugin, 'string')){
-                    plugin = _self.onLoading(plugin);
-                }
-                if(zn.is(plugin, 'array')){
-                    zn.extend(_routers, plugin[1]);
-                    plugin = plugin[0];
-                }
-
-                zn.extend(_relativeRouters, plugin);
-            });
-
-            if(argv.routers){
-                var __routers = zn.deepEachObject(argv.routers, this.onLoading.bind(this));
-                zn.extend(_relativeRouters, __routers);
-                if(_path){
-                    var _temp = {},
-                        _index = _routers[_path] || _relativeRouters[_path];
-                    _relativeRouters['/'] = _index;
-                    _routers[_path] = _relativeRouters;
-                }else {
-                    _routers = _relativeRouters;
-                    zn.extend(_routers, __routers);
-                }
+        createSession: function (argv, _session){
+            if(argv){
+                var _Session = Session || _session;
+                return this._session = new _Session(argv, this), this._session;
             }
-
-            this._routers = _routers;
-            this._relativeRouters = _relativeRouters;
-            console.log(this._routers, this._relativeRouters);
-            znui.util.Session.setHome(this.get('home'))
-                            .setMain(this.get('main'))
-                            .setBasePath(this.get('path'));
-            zn.http.setHost(this.get('host'), this.get('port'));
-        },
-        onLoading: function (value){
-            return value;
         },
         __getRenderView: function (){
-            return this.render && this.render.call(this, this.gets());
+            return this.render && this.render.call(this);
+        },
+        __getContainer: function (){
+            if(zn.is(this.container, 'string')){
+                return document.getElementById(this.container);
+            }
+
+            return this.container;
+        },
+        __getGlobalRender: function (){
+            var _render = this._globalRender,
+                _view = null;
+            switch(zn.type(_render)){
+                case 'object':
+                    if(_render.$$typeof){
+                        _view = _render;
+                    }else{
+                        _view = React.createElement(React.createClass(_render), {});
+                    }
+                    break;
+                case 'function':
+                    if(_render.prototype.isReactComponent){
+                        _view = _render;
+                    }else{
+                        _view = _render.call(this);
+                    }
+                    break;
+                case 'array':
+                    _view = <>
+                        {_render.map((item)=>this.__getGlobalRender(item))}
+                    </>;
+            }
+
+            return _view;
+        },
+        __getRender: function (view){
+            var _view = null;
+            if(view){
+                _view = view;
+            }else{
+                var _render = this._render;
+                switch(zn.type(_render)){
+                    case 'object':
+                        if(_render.$$typeof){
+                            _view = _render;
+                        }else{
+                            _view = React.createElement(React.createClass(_render), {});
+                        }
+                        break;
+                    case 'function':
+                        if(_render.prototype.isReactComponent){
+                            _view = _render;
+                        }else{
+                            _view = _render.call(this);
+                        }
+                        break;
+                    case 'array':
+                        _view = <>
+                            {_render.map((item)=>this.__getRender(item))}
+                        </>;
+                }
+            }
+
+            return _view;
+        },
+        __render: function (view){
+            this.fire('render', view);
+            return ReactDOM.render(<>{this.__getRender(view)}{this.__getGlobalRender()}</>, this.__getContainer()), this;
         },
         update: function (view){
-            var _Router = this.get('router');
-            if(!_Router){
-                _Router = znui.isMobile()?znui.react.WapRouter:znui.react.WebRouter;
+            this.fire('update', view);
+            if(this._delay) {
+                return window.setTimeout(()=>this.__render(view), this._delay);
             }
-
-            if(!_Router){
-                return alert('只适合手机版本打开!'), false;
-            }
-
-            var _view = view || this.__getRenderView()
-                _container = this.get('container');
-            _container = zn.type(_container)=='string'?document.getElementById(_container):_container;
-            if(this.get('absolute')){
-                _container.style.position = 'absolute';
-                _container.style.width = '100%';
-                _container.style.height = '100%';
-            }
-            if(znui.isMobile()){
-                _container.classList.add('zr-mobile');
-            }
-            //require('react-dom').render(_view, _container)
-            if(this.get('global')){
-                _view = <div style={{width: '100%', height: '100%'}}>
-                    {_view}
-                    {this.get('global')}
-                </div>;
-            }
-            setTimeout(()=>require('react-dom').render(_view, _container), 50);
+            
+            return this.__render(view);
         }
     }
 });
