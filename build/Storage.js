@@ -12,12 +12,13 @@ module.exports = zn.Class({
   },
   methods: {
     init: function init(argv, application) {
-      this.sets(zn.extend({
+      argv = zn.extend({
         data: {}
-      }, argv));
+      }, argv);
+      this.sets(argv);
       this._application = application;
 
-      this.__initEngine(argv.engine);
+      this.__initEngine(this._engine);
 
       this.fire('init', argv, application);
     },

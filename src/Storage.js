@@ -8,12 +8,10 @@ module.exports = zn.Class({
     },
     methods: {
         init: function (argv, application){
-            this.sets(zn.extend({
-                data: {}
-            }, argv));
-
+            argv = zn.extend({ data: {} }, argv);
+            this.sets(argv);
             this._application = application;
-            this.__initEngine(argv.engine);
+            this.__initEngine(this._engine);
             this.fire('init', argv, application);
         },
         __initEngine: function (engine){

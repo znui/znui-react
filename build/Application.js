@@ -19,15 +19,23 @@ module.exports = zn.Class({
     globalRender: null
   },
   methods: {
-    init: function init(argv) {
+    init: function init(argv, events) {
       argv = zn.extend({}, argv);
       this.sets(argv);
+
+      this.__initEvents(events || {});
+
       this._storage = new Storage(argv.storage);
 
       var _value = this.fire('init', argv);
 
       if (_value !== false) {
         this.update(_value);
+      }
+    },
+    __initEvents: function __initEvents(events) {
+      for (var event in events) {
+        this.on(event, events[event], this);
       }
     },
     createSession: function createSession(argv, _session) {

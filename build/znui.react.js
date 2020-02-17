@@ -17,7 +17,6 @@ znui.ReactDOM = ReactDOM;
 znui.require = require;
 znui.axios = zn.data.zncaller = require('axios');
 module.exports = znui.react = {
-  Application: Application,
   DataView: require('./DataView'),
   Session: require('./Session'),
   Storage: require('./Storage'),
