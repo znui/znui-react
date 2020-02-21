@@ -1,0 +1,26 @@
+{
+    "title": "",
+    "metas": [
+        { "charset": "UTF-8" },
+        { "name": "viewport", "content": "initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" },
+        { "name": "apple-mobile-web-app-capable", "content": "yes"},
+        { "name": "apple-mobile-web-app-status-bar-style", "content": "black"},
+        { "name": "format-detection", "content": "telephone=no"},
+        { "name": "keywords", "content": "   "},
+        { "name": "description", "content": "    "},
+        { "http-equiv": "x-rim-auto-match", "content": "no-cache"},
+        { "http-equiv": "pragma", "content": ""},
+        { "http-equiv": "cache-control", "content": "no-cache, must-revalidate"},
+        { "http-equiv": "expires", "content": "Wed, 26 Feb 1997 08:21:57 GMT"}
+    ],
+    "links": [
+        { "rel": "icon", "type": "image/x-icon", "href": "" },
+        { "rel": "stylesheet", "href": "" }
+    ],
+    "scripts": [
+        { "type": "text/javascript", "src": "" }
+    ],
+    "windows": {
+
+    }
+}

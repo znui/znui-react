@@ -1,6 +1,6 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-var optimizeCss = require('optimize-css-assets-webpack-plugin');
+var OptimizeCss = require('optimize-css-assets-webpack-plugin');
 var path = require('path');
 var argv = process.argv;
 var uglifyIndex = argv.indexOf('--uglify'),
@@ -12,7 +12,7 @@ if(uglifyIndex!=-1){
             compress: false
         }
     }));
-    minimizer.push(new optimizeCss({ }));
+    minimizer.push(new OptimizeCss({ }));
 }
 
 module.exports = {
@@ -89,7 +89,7 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin({ filename: "[name].css", disable: false, allChunks: true }),
-        new optimizeCss({
+        new OptimizeCss({
             assetNameRegExp: /\.style\.css$/g,
             cssProcessor: require('cssnano'),
             cssProcessorOptions: { discardComments: { removeAll: true } },
