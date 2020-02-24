@@ -1,1 +1,1 @@
-module.exports = require('znui-react/webpack').application.development;
+module.exports = require('znui-react/webpack').zxnz.development;

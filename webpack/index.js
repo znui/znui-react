@@ -1,3 +1,4 @@
+require('@zeanium/core');
 var zr = require('./zr');
 module.exports = zr.deepExtend(zr, {
     base: require('./webpack.base'),

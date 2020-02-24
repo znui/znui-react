@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var argv = process.argv,
+    __parseArgv__ = function (argv){
+        var _keys = {},
+            _key = '',
+            _counter = {};
+        for(var i = 4, _len = argv.length; i < _len; i++){
+            if(argv[i].indexOf('--')!=-1){
+                _key = argv[i].replace('--', '');
+                _keys[_key] = true;
+                _counter[i+1] = _key;
+            }else{
+                if(_counter[i]){
+                    _keys[_counter[i]] = argv[i];
+                }
+            }
+        }
+
+        return _keys;
+    },
+    _commands = {
+        application: require('./application'),
+        component: require('./component'),
+        plugin: require('./plugin'),
+        zxnz: require('./zxnz')
+    },
+    _env = {
+        $bin: argv[0],
+        $path: argv[1],
+        $command: argv[2],
+        $method: argv[3]
+    },
+    _argv = __parseArgv__(argv);
+
+if(!_commands[_env.$command]){
+    throw new Error(_env.$command + ' module is not exist.');
+}
+
+if(!_commands[_env.$command][_env.$method]) {
+    throw new Error(_env.$method + ' method is not exist.');
+}
+
+_commands[_env.$command][_env.$method].call(_commands[_env.$command], _argv);

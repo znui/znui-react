@@ -25,7 +25,7 @@ var __ = {
             _config = {
                 entry: {},
                 output: {
-                    path: node_path.resolve(_basePath, '../www', 'dist'),
+                    path: node_path.resolve(_basePath, '../www', 'dist.' + (process.env.NODE_ENV || 'production')),
                     filename: '[name].bundle.js'
                 }
             };

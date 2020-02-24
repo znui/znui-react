@@ -9,7 +9,7 @@ var node_fs = require('fs'),
 
 var __ = {
     getBasePath: function (entryjs){
-        if(node_fs.existsSync(node_path.resolve(dirname, entryjs || 'znui.react.entry.js'))){
+        if(node_fs.existsSync(node_path.resolve(dirname, entryjs || '_entry.js'))){
             return node_path.resolve(dirname);
         }
         if(node_fs.existsSync(node_path.resolve(dirname, 'zn.app.config.js')) || node_fs.existsSync(node_path.resolve(dirname, 'zn.server.config.js'))){
