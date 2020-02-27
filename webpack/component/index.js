@@ -1,5 +1,6 @@
+var __ = require('../__/index');
 module.exports = {
-    development: require('./webpack.development'),
-    example: require('./webpack.example'),
-    production: require('./webpack.production')
+    development: zn.deepAssigns({}, __.development, require('./development')),
+    production: zn.deepAssigns({}, __.production, require('./production')),
+    example: zn.deepAssigns({}, __.development, require('./example')),
 };
