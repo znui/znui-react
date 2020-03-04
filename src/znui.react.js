@@ -35,6 +35,43 @@ module.exports = znui.react = {
             return this._zr_["_" + key + "_"];
         }
     },
+    createReactElement: function (argv, options){
+        if(!argv) {
+            return;
+        }
+        if(argv && typeof argv === 'object' && argv.$$typeof){
+            return argv;
+        }
+        if(argv.isReactComponent && typeof argv.isReactComponent === 'function' && argv.isReactComponent()){
+            return argv;
+        }
+        switch(zn.type(argv)){
+            case "function":
+                if(argv.prototype && argv.prototype.render) {
+                    return znui.React.createElement(argv, options);
+                }else{
+                    argv = argv(options);
+                    if(argv && typeof argv === 'object' && argv.$$typeof){
+                        return argv;
+                    }else{
+                        return;
+                    }
+                }
+            case "object":
+                var _render = argv.component || argv.render;
+                if(typeof _render == 'string'){
+					_render = zn.path(window, _render);
+				}
+                if(_render) {
+                    return znui.react.createReactElement(_render, zn.deepAssign({}, argv, {
+                        component: null,
+                        render: null
+                    }));
+                }
+        }
+
+        return;
+    },
     fixCreateReactClass: function (React, createClass){
         if(React && createClass && !React.createClass){
             React.createClass = createClass;

@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var React = require('react');
 
 var ReactDOM = require('react-dom');
@@ -38,6 +40,51 @@ module.exports = znui.react = {
     get: function get(key) {
       return this._zr_["_" + key + "_"];
     }
+  },
+  createReactElement: function createReactElement(argv, options) {
+    if (!argv) {
+      return;
+    }
+
+    if (argv && _typeof(argv) === 'object' && argv.$$typeof) {
+      return argv;
+    }
+
+    if (argv.isReactComponent && typeof argv.isReactComponent === 'function' && argv.isReactComponent()) {
+      return argv;
+    }
+
+    switch (zn.type(argv)) {
+      case "function":
+        if (argv.prototype && argv.prototype.render) {
+          return znui.React.createElement(argv, options);
+        } else {
+          argv = argv(options);
+
+          if (argv && _typeof(argv) === 'object' && argv.$$typeof) {
+            return argv;
+          } else {
+            return;
+          }
+        }
+
+      case "object":
+        var _render = argv.component || argv.render;
+
+        if (typeof _render == 'string') {
+          _render = zn.path(window, _render);
+        }
+
+        if (_render) {
+          return znui.react.createReactElement(_render, zn.deepAssign({}, argv, {
+            component: null,
+            render: null
+          }));
+        }
+
+    }
+
+    return;
   },
   fixCreateReactClass: function fixCreateReactClass(React, createClass) {
     if (React && createClass && !React.createClass) {
