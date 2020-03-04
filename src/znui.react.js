@@ -12,7 +12,10 @@ znui.axios = zn.data.zncaller = require('axios');
 
 
 module.exports = znui.react = {
+    Application: Application,
+    DataLifecycle: require('./DataLifecycle'),
     DataView: require('./DataView'),
+    Lifecycle: require('./Lifecycle'),
     Session: require('./Session'),
     Storage: require('./Storage'),
     createApplication: function (args){
@@ -42,7 +45,7 @@ module.exports = znui.react = {
         if(argv && typeof argv === 'object' && argv.$$typeof){
             return argv;
         }
-        if(argv.isReactComponent && typeof argv.isReactComponent === 'function' && argv.isReactComponent()){
+        if(argv.isReactComponent){
             return argv;
         }
         switch(zn.type(argv)){

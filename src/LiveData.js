@@ -1,7 +1,7 @@
 var React = znui.React || require('react');
 
 module.exports = React.createClass({
-	displayName:'ZRLifecycle',
+	displayName:'ZRLiveData',
 	getDefaultProps: function (){
 		return this.props.getDefaultProps && this.props.getDefaultProps.apply(this, arguments);
 	},
