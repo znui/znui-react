@@ -6,6 +6,7 @@ module.exports = zn.Class({
     events: ['init', 'update', 'render'],
     properties: {
         container: 'container',
+        components: null,
         delay: 0,
         session: null,
         storage: null,
@@ -16,12 +17,17 @@ module.exports = zn.Class({
         init: function (argv, events){
             argv = zn.extend({}, argv);
             this.sets(argv);
-            this.__initEvents(events || {});
+            this._components = this.__initComponents(argv.components);
             this._storage = new Storage(argv.storage);
+            this.__initEvents(events || {});
             var _value = this.fire('init', argv);
             if(_value !== false){
                 this.update(_value);
             }
+        },
+        __initComponents: function (components){
+            var _components = components || [];
+            _components.for
         },
         __initEvents: function (events){
             for(var event in events){
@@ -34,9 +40,6 @@ module.exports = zn.Class({
                 return this._session = new _Session(argv, this), this._session;
             }
         },
-        __getRenderView: function (){
-            return this.render && this.render.call(this);
-        },
         __getContainer: function (){
             if(zn.is(this.container, 'string')){
                 return document.getElementById(this.container);
@@ -45,64 +48,25 @@ module.exports = zn.Class({
             return this.container;
         },
         __getGlobalRender: function (){
-            var _render = this._globalRender,
-                _view = null;
-            switch(zn.type(_render)){
-                case 'object':
-                    if(_render.$$typeof){
-                        _view = _render;
-                    }else{
-                        _view = React.createElement(React.createClass(_render), {});
-                    }
-                    break;
-                case 'function':
-                    if(_render.prototype.isReactComponent){
-                        _view = _render;
-                    }else{
-                        _view = _render.call(this);
-                    }
-                    break;
-                case 'array':
-                    _view = <>
-                        {_render.map((item)=>this.__getGlobalRender(item))}
-                    </>;
-            }
-
-            return _view;
+            return znui.react.createReactElement(this._globalRender, {
+                application: this
+            });
         },
         __getRender: function (view){
-            var _view = null;
             if(view){
-                _view = view;
+                return view;
             }else{
-                var _render = this._render;
-                switch(zn.type(_render)){
-                    case 'object':
-                        if(_render.$$typeof){
-                            _view = _render;
-                        }else{
-                            _view = React.createElement(React.createClass(_render), {});
-                        }
-                        break;
-                    case 'function':
-                        if(_render.prototype.isReactComponent){
-                            _view = _render;
-                        }else{
-                            _view = _render.call(this);
-                        }
-                        break;
-                    case 'array':
-                        _view = <>
-                            {_render.map((item)=>this.__getRender(item))}
-                        </>;
-                }
+                return znui.react.createReactElement(this._render, {
+                    application: this
+                });
             }
-
-            return _view;
         },
         __render: function (view){
             this.fire('render', view);
-            return ReactDOM.render(<>{this.__getRender(view)}{this.__getGlobalRender()}</>, this.__getContainer()), this;
+            return ReactDOM.render(<>
+                {this.__getRender(view)}
+                {this.__getGlobalRender()}
+            </>, this.__getContainer()), this;
         },
         update: function (view){
             this.fire('update', view);

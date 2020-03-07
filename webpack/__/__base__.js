@@ -4,8 +4,6 @@ var OptimizeCss = require('optimize-css-assets-webpack-plugin');
 var argv = zn.convertArrayArgv(process.argv);
 
 var _exports = {
-    env: argv.env,
-    argv: argv.argv,
     mode: process.env.NODE_ENV || 'production',
     context: process.cwd(),
     module: {

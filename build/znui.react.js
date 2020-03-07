@@ -46,14 +46,10 @@ module.exports = znui.react = {
   },
   createReactElement: function createReactElement(argv, options) {
     if (!argv) {
-      return;
+      return null;
     }
 
-    if (argv && _typeof(argv) === 'object' && argv.$$typeof) {
-      return argv;
-    }
-
-    if (argv.isReactComponent) {
+    if (argv && _typeof(argv) === 'object' && (argv.$$typeof || argv.isReactComponent)) {
       return argv;
     }
 
@@ -79,15 +75,27 @@ module.exports = znui.react = {
         }
 
         if (_render) {
-          return znui.react.createReactElement(_render, zn.deepAssign({}, argv, {
+          return znui.react.createReactElement(_render, zn.deepAssign({}, argv, options, {
             component: null,
             render: null
           }));
         }
 
+      case "array":
+        return React.createElement(React.Fragment, null, argv.map(function (item) {
+          return znui.react.createReactElement(item, zn.deepAssign({}, options));
+        }));
+
+      case "string":
+        var _render = zn.path(window, argv);
+
+        if (_render) {
+          return znui.react.createReactElement(_render, zn.deepAssign({}, options));
+        }
+
     }
 
-    return;
+    return null;
   },
   fixCreateReactClass: function fixCreateReactClass(React, createClass) {
     if (React && createClass && !React.createClass) {

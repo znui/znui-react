@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "2.0.6",
+  "version": "2.0.8",
   "description": "znui react is the front-end basic framework.",
   "main": "development.js",
   "repository": {
@@ -28,15 +28,19 @@
   "email": "xuyy0618@qq.com",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.0",
+    "create-react-class": "^15.6.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "znui": "latest"
+  },
+  "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
-    "axios": "^0.19.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
-    "create-react-class": "^15.6.3",
-    "cross-env": "^7.0.0",
     "css-loader": "^2.1.0",
     "cssnano": "^4.1.10",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -46,9 +50,7 @@
     "open-browser-webpack-plugin": "0.0.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "raw-loader": "^1.0.0",
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3",
-    "rimraf": "^2.6.3",
+    "rimraf": "^3.0.2",
     "scss": "^0.2.4",
     "scss-loader": "0.0.1",
     "style-loader": "^0.23.1",
@@ -56,6 +58,6 @@
     "url-loader": "^2.1.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "znui": "latest"
+    "webpack-dev-server": "^3.10.3"
   }
 }

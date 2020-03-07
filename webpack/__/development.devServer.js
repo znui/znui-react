@@ -37,8 +37,8 @@ module.exports = function (options){
             new OpenBrowserPlugin({
                 url: (_options.url || `http${_options.https?'s':''}://localhost:${_options.port}/`)
             }),
-            new webpack.optimize.ModuleConcatenationPlugin(),
-            new webpack.HotModuleReplacementPlugin()
+            //new webpack.optimize.ModuleConcatenationPlugin(),
+            //new webpack.HotModuleReplacementPlugin()
         ]
     };
 };

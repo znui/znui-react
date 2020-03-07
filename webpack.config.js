@@ -22,6 +22,8 @@ module.exports = {
         "znui.react": './znui.react.js',
     },
     externals: {
+        "axios": "axios",
+        "create-react-class": "createReactClass",
         "react": "React",
         "react-dom": "ReactDOM",
         "znui": "znui"
