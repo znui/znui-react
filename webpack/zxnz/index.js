@@ -19,7 +19,7 @@ module.exports = {
                 _options_[key] = _options[key];
             }
         }
-        console.log(zn.deepAssign(this[mode], _options_));
+        
         return process.env.NODE_ENV = mode, zn.deepAssign(this[mode], _options_);
     }
 };

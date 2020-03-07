@@ -14,6 +14,6 @@ module.exports = {
     },
     output: {
         path: path.resolve(cwd, 'www', 'dist/production'),
-        filename: '[name].production.js'
+        filename: '[name].bundle.js'
     }
 };

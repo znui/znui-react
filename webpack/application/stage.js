@@ -14,6 +14,6 @@ module.exports = {
     },
     output: {
         path: path.resolve(cwd, 'www', 'dist/stage'),
-        filename: '[name].stage.js'
+        filename: '[name].bundle.js'
     }
 };

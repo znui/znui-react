@@ -10,7 +10,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(cwd, 'www', 'dist/development'),
-        filename: '[name].development.js',
+        filename: '[name].bundle.js',
     },
     plugins: [
         
