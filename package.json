@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "znui react is the front-end basic framework.",
   "main": "development.js",
   "repository": {
@@ -44,7 +44,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "raw-loader": "^4.0.0",
+    "raw-loader": "^0.5.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "rimraf": "^3.0.2",
