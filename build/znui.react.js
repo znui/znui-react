@@ -2,22 +2,10 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-var React = require('react');
-
-var ReactDOM = require('react-dom');
-
-var createClass = require('create-react-class');
+var React = znui.React || require('react');
 
 var Application = require('./Application');
 
-if (React && createClass && !React.createClass) {
-  React.createClass = createClass;
-}
-
-znui.React = React;
-znui.ReactDOM = ReactDOM;
-znui.require = require;
-znui.axios = zn.data.zncaller = require('axios');
 module.exports = znui.react = {
   Application: Application,
   DataLifecycle: require('./DataLifecycle'),
@@ -27,22 +15,6 @@ module.exports = znui.react = {
   Storage: require('./Storage'),
   createApplication: function createApplication(args) {
     return new Application(args);
-  },
-  config: {
-    _zr_: {},
-    set: function set(key, value) {
-      return this._zr_["_" + key + "_"] = value, this;
-    },
-    sets: function sets(_sets) {
-      for (var key in _sets) {
-        this.set(key, _sets[key]);
-      }
-
-      return this;
-    },
-    get: function get(key) {
-      return this._zr_["_" + key + "_"];
-    }
   },
   createReactElement: function createReactElement(argv, options) {
     if (!argv) {
@@ -67,6 +39,8 @@ module.exports = znui.react = {
           }
         }
 
+        break;
+
       case "object":
         var _render = argv.component || argv.render;
 
@@ -75,51 +49,30 @@ module.exports = znui.react = {
         }
 
         if (_render) {
-          return znui.react.createReactElement(_render, zn.deepAssign({}, argv, options, {
+          return znui.react.createReactElement(_render, zn.deepAssigns({}, argv, options, {
             component: null,
             render: null
           }));
         }
 
+        break;
+
       case "array":
         return React.createElement(React.Fragment, null, argv.map(function (item) {
-          return znui.react.createReactElement(item, zn.deepAssign({}, options));
+          return znui.react.createReactElement(item, zn.deepAssigns({}, options));
         }));
 
       case "string":
         var _render = zn.path(window, argv);
 
         if (_render) {
-          return znui.react.createReactElement(_render, zn.deepAssign({}, options));
+          return znui.react.createReactElement(_render, zn.deepAssigns({}, options));
         }
 
+        break;
     }
 
     return null;
-  },
-  fixCreateReactClass: function fixCreateReactClass(React, createClass) {
-    if (React && createClass && !React.createClass) {
-      React.createClass = createClass;
-    }
-
-    return znui.React = React, React;
-  },
-  fixReactCreateClass: function fixReactCreateClass(react) {
-    var React = react || React;
-
-    if (React) {
-      if (!React.createClass) {
-        React.createClass = createClass;
-      }
-
-      if (React.createClass) {
-        return znui.React = React, React;
-      } else {
-        throw new Error('create-react-class is not exist.');
-      }
-    } else {
-      throw new Error('react is not exist.');
-    }
   },
   registerComponent: function registerComponent(key, args) {
     if (this[key]) {

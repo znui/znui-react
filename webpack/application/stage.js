@@ -10,7 +10,6 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
-        "znui-react": "zr"
     },
     output: {
         path: path.resolve(cwd, 'www', 'dist/stage'),

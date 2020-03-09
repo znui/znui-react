@@ -9,7 +9,7 @@ module.exports = zn.deepAssigns({}, require('./__base__'), {
             "process.env.NODE_ENV": "production"
         }),
         new ExtractTextPlugin({ 
-            filename: "[name].bundle.css", 
+            filename: "./dist/stage/[name].bundle.css", 
             disable: false, 
             allChunks: true 
         })

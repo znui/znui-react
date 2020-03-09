@@ -4,6 +4,17 @@ module.exports = {
     production: zn.deepAssigns({}, __.production, require('./production')),
     example: zn.deepAssigns({}, __.development, require('./example')),
     mode: function (mode, options){
-        return process.env.NODE_ENV = mode, zn.deepAssign(this[mode], options);
+        var _options = {},
+            _config = this[mode];
+        switch(zn.type(options)) {
+            case "object":
+                _options = options;
+                break;
+            case "function":
+                _options = options(_config);
+                break;
+        }
+        
+        return process.env.NODE_ENV = mode, zn.deepAssigns({ }, _config, _options);
     }
 };

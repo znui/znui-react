@@ -6,6 +6,10 @@ var argv = zn.convertArrayArgv(process.argv);
 var _exports = {
     mode: process.env.NODE_ENV || 'production',
     context: process.cwd(),
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM"
+    },
     module: {
         // Disable handling of unknown requires
         unknownContextRegExp: /$^/,

@@ -11,7 +11,7 @@ var Storage = require('./Storage.js');
 module.exports = zn.Class({
   events: ['init', 'update', 'render'],
   properties: {
-    container: 'container',
+    container: 'zr-container',
     components: null,
     delay: 0,
     session: null,
