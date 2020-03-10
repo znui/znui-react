@@ -1,10 +1,39 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var OptimizeCss = require('optimize-css-assets-webpack-plugin');
-var argv = zn.convertArrayArgv(process.argv);
+var argv = zn.convertArrayArgv(process.argv).argv;
+var node_path = require('path');
+
+var __ = {
+    alias: function (){
+        var _cwd = process.cwd(),
+            _prefix = argv['resolve.alias.prefix'],
+            _path = argv['resolve.alias.path'];
+
+        zn.debug('alias: ', argv, _path, _prefix);
+        if(!_path){
+            return {};
+        }
+
+        var _package = require(node_path.resolve(_cwd, './package.json')),
+            _devDeps = _package.devDependencies || _package.dependencies || {},
+            _alias = {};
+        for(var key in _devDeps) {
+            if(_prefix){
+                if(key.indexOf(_prefix) != -1) {
+                    _alias[key] = node_path.resolve(_cwd, _path, key);
+                }
+            }else{
+                _alias[key] = node_path.resolve(_cwd, _path, key);
+            }
+        }
+
+        return _alias;
+    }
+}
 
 var _exports = {
-    mode: process.env.NODE_ENV || 'production',
+    mode: process.env.NODE_ENV,
     context: process.cwd(),
     externals: {
         "react": "React",
@@ -73,7 +102,7 @@ var _exports = {
     }
 }
 
-if(argv.argv.uglify) {
+if(argv.uglify) {
     _exports.plugins.push(new OptimizeCss({
         assetNameRegExp: /\.style\.css$/g,
         cssProcessor: require('cssnano'),
@@ -87,5 +116,7 @@ if(argv.argv.uglify) {
     }));
     _exports.optimization.minimizer.push(new OptimizeCss({}));
 }
+
+zn.path(_exports, "resolve.alias", __.alias());
 
 module.exports = _exports;

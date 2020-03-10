@@ -35,9 +35,13 @@ module.exports = zn.Class({
       }
     },
     __initComponents: function __initComponents(components) {
-      var _components = components || [];
+      var _components = components || {};
 
-      _components["for"];
+      for (var key in _components) {
+        zr[key] = _components[key];
+      }
+
+      console.log(zr);
     },
     __initEvents: function __initEvents(events) {
       for (var event in events) {
@@ -74,6 +78,7 @@ module.exports = zn.Class({
     },
     __render: function __render(view) {
       this.fire('render', view);
+      console.log(this.__getRender(view));
       return ReactDOM.render(React.createElement(React.Fragment, null, this.__getRender(view), this.__getGlobalRender()), this.__getContainer()), this;
     },
     update: function update(view) {

@@ -1,13 +1,21 @@
-var znui = window.znui;
-if(!znui) {
-    znui = require('znui');
-}
 var React = require('react');
 var ReactDOM = require('react-dom');
 var axios = require('axios');
 var createReactClass = require('create-react-class');
 if(React && createReactClass && !React.createClass){
     React.createClass = createReactClass;
+}
+var znui = window.znui;
+if(!znui) {
+    if(process && process.env && process.env.NODE_ENV) {
+        if(process.env.NODE_ENV == 'development') {
+            znui = require('../znui');
+        }else{
+            znui = require('znui');
+        }
+    }else {
+        znui = require('znui');
+    }
 }
 znui.React = React;
 znui.ReactDOM = ReactDOM;

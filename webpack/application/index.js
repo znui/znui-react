@@ -1,11 +1,17 @@
 var __ = require('../__/index');
 module.exports = {
-    development: zn.deepAssigns({}, __.development, require('./development')),
-    production: zn.deepAssigns({}, __.production, require('./production')),
-    stage: zn.deepAssigns({}, __.stage, require('./stage')),
+    development: function (options){
+        return this.mode("development", options);
+    },
+    production: function (options){
+        return this.mode("production", options);
+    },
+    stage: function (options){
+        return this.mode("production", options);
+    },
     mode: function (mode, options){
         var _options = {},
-            _config = this[mode];
+            _config = zn.deepAssigns({}, __[mode], require('./' + mode));
         switch(zn.type(options)) {
             case "object":
                 _options = options;
@@ -15,6 +21,6 @@ module.exports = {
                 break;
         }
 
-        return process.env.NODE_ENV = mode, zn.deepAssigns({}, _config, _options);
+        return zn.deepAssigns({}, _config, _options);
     }
 };
