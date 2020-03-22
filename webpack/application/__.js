@@ -5,16 +5,7 @@ var node_fs = require('fs'),
 
 var __ = {
     getBasePath: function (entryjs){
-        var _cwd = process.cwd();
-        if(node_fs.existsSync(node_path.join(_cwd, entryjs))){
-            return node_path.resolve(_cwd);
-        }
-
-        if(node_fs.existsSync(node_path.join(_cwd, 'zn.app.config.js')) || node_fs.existsSync(node_path.join(_cwd, 'src', 'zn.app.config.js'))){
-            return node_path.join(_cwd, 'web', 'src');
-        }
-
-        return _cwd;
+        return node_path.join(process.cwd(), 'src');
     },
     getConfig: function (){
         var node_env = process.env.NODE_ENV || 'development';
@@ -24,8 +15,8 @@ var __ = {
             _page = argv.page || [],
             _dist = argv.dist || './dist/',
             _components = argv.components || [],
-            _template = argv.template || './web/__webpack__/template.html',
-            _data = argv.data || ('./web/__webpack__/' + node_env + '.json'),
+            _template = argv.template || './__webpack__/template.html',
+            _data = argv.data || ('./__webpack__/' + node_env + '.json'),
             _package = require(node_path.resolve(_cwd, './package.json')),
             _pluginArgv = {};
             _config = {
@@ -39,7 +30,7 @@ var __ = {
                     
                 },
                 output: {
-                    path: node_path.join(_cwd, './web/www/'),
+                    path: node_path.join(_cwd, './www/'),
                     filename: _dist + node_env + '/[name].bundle.js',
                     libraryTarget: "this"
                 },

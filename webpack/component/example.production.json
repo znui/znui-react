@@ -1,0 +1,14 @@
+{
+    "links": {
+
+    },
+    "externals": {
+        "zn": "./externals/zn.minx.js",
+        "zn.web": "./externals/zn.web.minx.js",
+        "react": "./externals/react.production.min.js",
+        "react-dom": "./externals/react-dom.production.min.js"
+    },
+    "scripts": {
+        
+    }
+}

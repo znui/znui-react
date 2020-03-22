@@ -26,6 +26,8 @@ module.exports = zn.Class({
       this._components = this.__initComponents(argv.components);
       this._storage = new Storage(argv.storage);
 
+      this.__initConfig(argv.config);
+
       this.__initEvents(events || {});
 
       var _value = this.fire('init', argv);
@@ -34,25 +36,37 @@ module.exports = zn.Class({
         this.update(_value);
       }
     },
+    __initConfig: function __initConfig(config) {
+      if (config) {
+        if (config.development && config.production) {
+          this._config = config[process.env.NODE_ENV || 'production'];
+        } else {
+          this._config = config;
+        }
+      }
+    },
     __initComponents: function __initComponents(components) {
-      var _components = components || {};
+      var _components = components || {},
+          _namespace = _components.__namespace__ || 'zr',
+          _var = zn.path(window, _namespace);
 
-      for (var key in _components) {
-        zr[key] = _components[key];
+      if (!_var) {
+        _var = {};
+        zn.path(window, _namespace, _var);
       }
 
-      console.log(zr);
+      _components.__namespace__ = null;
+      delete _components.__namespace__;
+
+      for (var key in _components) {
+        _var[key] = _components[key];
+      }
+
+      return this;
     },
     __initEvents: function __initEvents(events) {
       for (var event in events) {
         this.on(event, events[event], this);
-      }
-    },
-    createSession: function createSession(argv, _session) {
-      if (argv) {
-        var _Session = Session || _session;
-
-        return this._session = new _Session(argv, this), this._session;
       }
     },
     __getContainer: function __getContainer() {
@@ -78,8 +92,14 @@ module.exports = zn.Class({
     },
     __render: function __render(view) {
       this.fire('render', view);
-      console.log(this.__getRender(view));
       return ReactDOM.render(React.createElement(React.Fragment, null, this.__getRender(view), this.__getGlobalRender()), this.__getContainer()), this;
+    },
+    createSession: function createSession(argv, _session) {
+      if (argv) {
+        var _Session = Session || _session;
+
+        return this._session = new _Session(argv, this), this._session;
+      }
     },
     update: function update(view) {
       var _this = this;

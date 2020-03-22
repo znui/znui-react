@@ -10,7 +10,6 @@ var __ = {
             _prefix = argv['resolve.alias.prefix'],
             _path = argv['resolve.alias.path'];
 
-        zn.debug('alias: ', argv, _path, _prefix);
         if(!_path){
             return {};
         }
@@ -37,7 +36,9 @@ var _exports = {
     context: process.cwd(),
     externals: {
         "react": "React",
-        "react-dom": "ReactDOM"
+        "react-dom": "ReactDOM",
+        "@zeanium/core": "ZNCore",
+        "@zeanium/web": "ZNWeb"
     },
     module: {
         // Disable handling of unknown requires

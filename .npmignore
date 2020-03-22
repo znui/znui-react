@@ -3,12 +3,8 @@
 .git
 node_modules/*
 src/*
+__test__/*
 .babelrc
 .gitignore
 .npmignore
 package-lock.json
-webpack.config.js
-webpack.initial.js
-webpack.react.app.js
-webpack.react.js
-webpack.react.plugin.js

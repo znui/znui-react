@@ -8,8 +8,6 @@ module.exports = {
             filename: "./dist/development/[name].bundle.css", 
             disable: false, 
             allChunks: true 
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        })
     ]
 };

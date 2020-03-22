@@ -19,28 +19,43 @@ module.exports = zn.Class({
             this.sets(argv);
             this._components = this.__initComponents(argv.components);
             this._storage = new Storage(argv.storage);
+            this.__initConfig(argv.config);
             this.__initEvents(events || {});
             var _value = this.fire('init', argv);
             if(_value !== false){
                 this.update(_value);
             }
         },
-        __initComponents: function (components){
-            var _components = components || {};
-            for(var key in _components) {
-                zr[key] = _components[key];
+        __initConfig: function (config){
+            if(config) {
+                if(config.development && config.production){
+                    this._config = config[process.env.NODE_ENV || 'production'];
+                }else{
+                    this._config = config;
+                }
             }
-            console.log(zr);
+        },
+        __initComponents: function (components){
+            var _components = components || {},
+                _namespace = _components.__namespace__ || 'zr',
+                _var = zn.path(window, _namespace);
+            if(!_var) {
+                _var = {};
+                zn.path(window, _namespace, _var);
+            }
+            
+            _components.__namespace__ = null;
+            delete _components.__namespace__;
+
+            for(var key in _components) {
+                _var[key] = _components[key];
+            }
+            
+            return this;
         },
         __initEvents: function (events){
             for(var event in events){
                 this.on(event, events[event], this);
-            }
-        },
-        createSession: function (argv, _session){
-            if(argv){
-                var _Session = Session || _session;
-                return this._session = new _Session(argv, this), this._session;
             }
         },
         __getContainer: function (){
@@ -66,11 +81,16 @@ module.exports = zn.Class({
         },
         __render: function (view){
             this.fire('render', view);
-            console.log(this.__getRender(view));
             return ReactDOM.render(<>
                 {this.__getRender(view)}
                 {this.__getGlobalRender()}
             </>, this.__getContainer()), this;
+        },
+        createSession: function (argv, _session){
+            if(argv){
+                var _Session = Session || _session;
+                return this._session = new _Session(argv, this), this._session;
+            }
         },
         update: function (view){
             this.fire('update', view);

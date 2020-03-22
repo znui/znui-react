@@ -1,18 +1,11 @@
-var cwd = process.cwd(),
-    path = require('path');
-    
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 module.exports = {
-    context: path.resolve(cwd, 'src'),
-    entry: {
-        'index': './index.js',
-        'index.style': './index.less'
-    },
-    externals: {
-        "react": "React",
-        "react-dom": "ReactDOM",
-    },
-    output: {
-        path: path.resolve(cwd, 'www', 'dist/production'),
-        filename: '[name].bundle.js'
-    }
+    plugins: [
+        new ExtractTextPlugin({ 
+            filename: "./dist/production/[name].bundle.css", 
+            disable: false, 
+            allChunks: true 
+        })
+    ]
 };

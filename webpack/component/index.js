@@ -7,9 +7,9 @@ module.exports = {
     production: function (options){
         return this.mode('production', options);
     },
-    example: function (options){
+    example: function (mode, options){
         var _options = {},
-            _config = require('./example.js');
+            _config = require('./example.' + (mode||'production') + '.js');
         switch(zn.type(options)) {
             case "object":
                 _options = options;

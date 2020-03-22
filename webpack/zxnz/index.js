@@ -7,6 +7,9 @@ module.exports = {
     development: function (options){
         return this.mode('development', options);
     },
+    start: function (options){
+        return this.mode('development', options);
+    },
     production: function (options){
         return this.mode('production', options);
     },

@@ -1,53 +1,64 @@
+process.env.NODE_ENV = 'production';
 var cwd = process.cwd(),
     node_fs = require('fs'),
     node_path = require('path'),
     webpack = require('webpack'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    node_env = process.env.NODE_ENV || 'development',
-    argv = zn.convertArrayArgv(process.argv).argv;
+    UglifyJsPlugin = require('uglifyjs-webpack-plugin'),
+    OptimizeCss = require('optimize-css-assets-webpack-plugin'),
+    node_env = process.env.NODE_ENV,
+    processArgv = zn.convertArrayArgv(process.argv),
+    argv = processArgv.argv;
 
-var _template = argv.template || './example/template.html',
-    _data = argv.data || ('./example/template.json'),
-    _page = argv.page || 'example.html',
+var _template = node_path.resolve(cwd, (argv.template || './example/template.html')),
+    _data = node_path.resolve(cwd, (argv.data || './example/' + node_env + '.json')),
+    _page = argv.page || 'index.html',
     _package = require(node_path.resolve(cwd, './package.json'));
 
-if(node_fs.existsSync(node_path.resolve(cwd, _template))) {
-    _template = node_path.resolve(cwd, _template);
-}else{
+if(!node_fs.existsSync(_template)) {
     _template = node_path.resolve(__dirname, './template.html');
 }
 
 var _htmlwebpackplugin = {
-    title: 'Example' + _package.name,
+    title: 'Example ' + _package.name,
     name: _package.name,
     version: _package.version,
     keywords: _package.keywords,
     description: _package.description,
     releaseTime: (new Date()).toLocaleString(),
-    commitid: (new Date()).getTime(),
+    //commitid: (new Date()).getTime(),
     env: node_env,
     hash: true,
+    minify: true,
     inject: true,
     filename: _page,
     template: _template
 };
 
-if(node_fs.existsSync(node_path.resolve(cwd, _data))) {
-    _htmlwebpackplugin = zn.deepAssign(_htmlwebpackplugin, require(node_path.resolve(cwd, _data)));
+if(!node_fs.existsSync(_data)) {
+    _data = node_path.resolve(__dirname, './example.' + node_env + '.json');
+}
+
+if(node_fs.existsSync(_data)) {
+    _htmlwebpackplugin = zn.deepAssign(_htmlwebpackplugin, require(_data));
 }
 
 module.exports = {
     context: node_path.join(cwd, 'example'),
-    mode: 'development',
-    devtool: 'source-map',
+    mode: node_env,
     entry: {
-        "example": "./src/index.js"
+        "index": "./src/index.js"
+    },
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM"
     },
     output: {
         path: node_path.join(cwd, 'example', 'www'),
         //chunkFilename: '[name].js',
-        filename: './dist/[name].js',
+        filename: './dist/[name].min.js',
         //library: "friendly",
         libraryTarget: "this"
         //libraryExport: "default"
@@ -105,48 +116,56 @@ module.exports = {
             }
         ]
     },
-    devServer: {
-        compress: true,
-        contentBase: node_path.resolve(cwd, "./example/www/"),
-        disableHostCheck: true,
-        hot: true,
-        https: false,
-        open: 'Google Chrome',
-        openPage: _page,
-        port: 9000,
-        historyApiFallback: {
-            disableDotRule: true,
-            index: _page,
-            rewrites: [
-                {
-                    from: /\.hot-update\.json$/,
-                    to: function (context) {
-                        return '/' + node_path.basename(context.parsedUrl.pathname);
-                    }
-                }, 
-                {
-                    from: /\.hot-update\.js$/,
-                    to: function (context) {
-                        return '/' + node_path.basename(context.parsedUrl.pathname);
-                    }
-                }
-            ]
-        }
-    },
     plugins: [
         new webpack.DefinePlugin({
-            "process.env.NODE_ENV": '"development"'
+            "process.env.NODE_ENV": '"production"'
         }),
         new ExtractTextPlugin({ 
-            filename: "./dist/[name].css", 
+            filename: "./dist/[name].min.css", 
             disable: false, 
             allChunks: true 
         }),
+        new CopyWebpackPlugin([
+            {
+                from: node_path.resolve('node_modules/@zeanium/core/dist/zn.minx.js'),
+                to: node_path.resolve(cwd, './example/www/externals/'),
+                force: true
+            },
+            {
+                from: node_path.resolve('node_modules/@zeanium/web/dist/zn.web.minx.js'),
+                to: node_path.resolve(cwd, './example/www/externals/'),
+                force: true
+            },
+            {
+                from: node_path.resolve('node_modules/react/umd/react.production.min.js'),
+                to: node_path.resolve(cwd, './example/www/externals/'),
+                force: true
+            },
+            {
+                from: node_path.resolve('node_modules/react-dom/umd/react-dom.production.min.js'),
+                to: node_path.resolve(cwd, './example/www/externals/'),
+                force: true
+            }
+        ]),
         new HtmlWebpackPlugin(_htmlwebpackplugin),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        new OptimizeCss({
+            assetNameRegExp: /\.style\.css$/g,
+            cssProcessor: require('cssnano'),
+            cssProcessorOptions: { discardComments: { removeAll: true } },
+            canPrint: true
+        })
     ],
     performance: {
         hints: false
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    compress: false
+                }
+            }),
+            new OptimizeCss({})
+        ]
     }
 };
