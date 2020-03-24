@@ -10,9 +10,10 @@ var ZRDataView = React.createClass({
 	},
 	componentDidMount:function(){
 		var _events = this.props.events || {},
+			_data = this.props.data || [],
 			_before = _events.before,
 			_after = _events.after;
-		this.state.data = zn.data.create(this.props.data, zn.extend(_events, {
+		this.state.data = zn.data.create(_data, zn.extend(_events, {
 			before: function (sender, data){
 				this.setState({
 					loading: true
