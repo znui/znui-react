@@ -33,7 +33,8 @@ var __ = {
                 externals: {
                     "react": "React",
                     "react-dom": "ReactDOM",
-                    //"znui-react": "zr"
+                    "@zeanium/core": "ZNCore",
+                    "@zeanium/web": "ZNWeb"
                 },
                 entry: {
                     

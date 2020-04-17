@@ -19,8 +19,10 @@ if(!znui) {
 }
 znui.React = React;
 znui.ReactDOM = ReactDOM;
-znui.axios = axios;
-zn.data.setCaller(axios);
+if(axios){
+    znui.axios = axios;
+    if(zn.data && zn.data.setCaller) zn.data.setCaller(axios);
+}
 
 window.zr = {
     __zr__: {},

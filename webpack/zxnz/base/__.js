@@ -1,10 +1,10 @@
-var __ = require('../__/index'),
+var __ = require('../../__/index'),
     node_path = require('path'),
     cwd = process.cwd();
     
 module.exports = function (mode){
     return {
-        context: node_path.resolve(cwd, 'src'),
+        context: node_path.resolve(cwd, './web/src'),
         entry: {
             'index': './index.js',
             'index.style': './index.less'
@@ -12,11 +12,9 @@ module.exports = function (mode){
         externals: {
             "react": "React",
             "react-dom": "ReactDOM",
-            "@zeanium/core": "ZNCore",
-            "@zeanium/web": "ZNWeb"
         },
         output: {
-            path: node_path.resolve(cwd, './__'),
+            path: node_path.resolve(cwd, './web/__'),
             //chunkFilename: '[name].js',
             filename: './dist/' + mode + '/[name].bundle.js',
             //library: "friendly",

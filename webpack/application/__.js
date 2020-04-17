@@ -24,7 +24,8 @@ var __ = {
                 externals: {
                     "react": "React",
                     "react-dom": "ReactDOM",
-                    //"znui-react": "zr"
+                    "@zeanium/core": "ZNCore",
+                    "@zeanium/web": "ZNWeb"
                 },
                 entry: {
                     
@@ -100,6 +101,6 @@ var __ = {
     }
 };
 
-module.exports = function (mode){
-    return process.env.NODE_ENV = mode, __.getConfig();
+module.exports = function (){
+    return __.getConfig();
 }

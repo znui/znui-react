@@ -1,6 +1,4 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-var OptimizeCss = require('optimize-css-assets-webpack-plugin');
 var argv = zn.convertArrayArgv(process.argv).argv;
 var node_path = require('path');
 
@@ -97,25 +95,7 @@ var _exports = {
     plugins: [],
     performance: {
         hints: process.env.NODE_ENV === 'production' ? "warning" : false
-    },
-    optimization: {
-        minimizer: []
     }
-}
-
-if(argv.uglify) {
-    _exports.plugins.push(new OptimizeCss({
-        assetNameRegExp: /\.style\.css$/g,
-        cssProcessor: require('cssnano'),
-        cssProcessorOptions: { discardComments: { removeAll: true } },
-        canPrint: true
-    }));
-    _exports.optimization.minimizer.push(new UglifyJsPlugin({
-        uglifyOptions: {
-            compress: false
-        }
-    }));
-    _exports.optimization.minimizer.push(new OptimizeCss({}));
 }
 
 zn.path(_exports, "resolve.alias", __.alias());

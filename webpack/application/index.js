@@ -8,18 +8,19 @@ module.exports = {
         return this.mode('development', options);
     },
     start: function (options){
-        return this.mode('development', options);
+        return this.mode('start', options);
     },
     production: function (options){
         return this.mode('production', options);
     },
     stage: function (options){
-        return this.mode('production', options);
+        return this.mode('stage', options);
     },
     mode: function (mode, options){
         var _mode = mode || 'development',
             _options = {},
-            _config = zn.deepAssigns({ }, __.mode(_mode), __application__(_mode), require('./' + _mode));
+            _config = zn.deepAssigns({ }, __.mode(_mode), __application__(), require('./' + _mode + '.js'));
+
         switch(zn.type(options)) {
             case "object":
                 _options = options;

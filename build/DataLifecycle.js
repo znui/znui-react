@@ -15,23 +15,31 @@ module.exports = React.createClass({
         _before = _events.before,
         _after = _events.after;
 
-    this.data = zn.data.create(this.props.data, zn.extend(_events, {
+    var _data = zn.data.create(this.props.data, zn.extend(_events, {
       before: function (sender, data) {
-        this.setState({
-          loading: true
-        });
-        this.props.onLoading && this.props.onLoading(data, this);
-        _before && _before(sender, data);
+        var _return = this.props.onLoading && this.props.onLoading(data, this);
+
+        if (_return !== false) {
+          this.setState({
+            loading: true
+          });
+          _before && _before(sender, data);
+        }
       }.bind(this),
       after: function (sender, data) {
-        this.setState({
-          loading: false,
-          data: data
-        });
-        this.props.onFinished && this.props.onFinished(data, this);
-        _after && _after(sender, data);
+        var _return = this.props.onFinished && this.props.onFinished(data, this);
+
+        if (_return !== false) {
+          this.setState({
+            loading: false,
+            data: data
+          });
+          _after && _after(sender, data);
+        }
       }.bind(this)
     }), this.props.context);
+
+    this.props.onDataCreated && this.props.onDataCreated(_data, this);
   },
   render: function render() {
     var _data = this.state.data,
@@ -44,6 +52,7 @@ module.exports = React.createClass({
         _return = ZRDataView.loadingRender || _default;
       }
 
+      console.log('Loading... ', _return);
       return _return || _default;
     }
 

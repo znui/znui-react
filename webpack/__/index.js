@@ -14,7 +14,7 @@ module.exports = {
                 break;
         }
 
-        return process.env.NODE_ENV = mode, zn.deepAssigns({}, _config, _options);
+        return zn.deepAssigns({}, _config, _options);
     },
     development: function (options){
         return this.mode('development', options);
@@ -23,6 +23,9 @@ module.exports = {
         return this.mode('production', options);
     },
     stage: function (options){
-        return this.mode('production', options);
+        return this.mode('stage', options);
+    },
+    start: function (options){
+        return this.mode('start', options);
     }
 };
