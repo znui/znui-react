@@ -6,7 +6,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin"),
     argv = zn.convertArrayArgv(process.argv).argv,
     devServer = {
         compress: true,
-        contentBase: node_path.resolve(cwd, "./www/"),
+        contentBase: node_path.resolve(cwd, "./dist/"),
         disableHostCheck: true,
         hot: true,
         https: true,
@@ -51,27 +51,27 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 from: node_path.resolve('node_modules/@zeanium/core/dist/zn.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/@zeanium/web/dist/zn.web.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/react/umd/react.development.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/react-dom/umd/react-dom.development.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             }
         ]),
         new ExtractTextPlugin({ 
-            filename: "./dist/development/[name].bundle.css", 
+            filename: "./bundles/development/[name].bundle.css", 
             disable: false, 
             allChunks: true 
         }),

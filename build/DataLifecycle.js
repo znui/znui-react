@@ -52,7 +52,6 @@ module.exports = React.createClass({
         _return = ZRDataView.loadingRender || _default;
       }
 
-      console.log('Loading... ', _return);
       return _return || _default;
     }
 

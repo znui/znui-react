@@ -8,27 +8,27 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 from: node_path.resolve('node_modules/@zeanium/core/dist/zn.minx.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/@zeanium/web/dist/zn.web.minx.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/react/umd/react.production.min.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             },
             {
                 from: node_path.resolve('node_modules/react-dom/umd/react-dom.production.min.js'),
-                to: node_path.resolve(cwd, './www/externals/'),
+                to: node_path.resolve(cwd, './dist/externals/'),
                 force: true
             }
         ]),
         new ExtractTextPlugin({ 
-            filename: "./dist/stage/[name].bundle.css", 
+            filename: "./bundles/stage/[name].bundle.css", 
             disable: false, 
             allChunks: true 
         })

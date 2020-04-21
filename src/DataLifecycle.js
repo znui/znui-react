@@ -43,7 +43,6 @@ module.exports = React.createClass({
 			if(_return === null) {
 				_return = ZRDataView.loadingRender || _default;
 			}
-			console.log('Loading... ', _return);
 			return _return || _default;
 		}
 		if(_data){

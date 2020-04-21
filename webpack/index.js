@@ -14,6 +14,7 @@ module.exports = {
         
         return process.env.NODE_ENV = mode, zn.deepAssigns({ }, _config, _options);
     },
+    app: require('./app/index.js'),
     application: require('./application/index.js'),
     component: require('./component/index.js'),
     zxnz: require('./zxnz/index.js')
