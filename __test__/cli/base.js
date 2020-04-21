@@ -1,4 +1,4 @@
-var index = require('../webpack/index');
+var index = require('../../webpack/index');
 
 console.log('Base: ', index.base);
 console.log('Development: ', index.deepExtend(index.base, index.development));

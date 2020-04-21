@@ -1,3 +1,3 @@
-var index = require('../webpack/index');
+var index = require('../../webpack/index');
 
 console.log('Application: ', index.application);
