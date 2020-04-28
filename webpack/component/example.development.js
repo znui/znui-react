@@ -119,10 +119,10 @@ module.exports = {
         contentBase: node_path.resolve(cwd, "./example/www/"),
         disableHostCheck: true,
         hot: true,
-        https: false,
+        https: (argv['https'] === false) ? false : true,
         open: 'Google Chrome',
         openPage: _page,
-        port: 9000,
+        port: argv['port'] || 8181,
         historyApiFallback: {
             disableDotRule: true,
             index: _page,
