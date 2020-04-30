@@ -22,15 +22,24 @@ module.exports = React.createClass({
 					_before && _before(sender, data);
 				}
 			}.bind(this),
-			after: function (sender, data){
-				var _return = this.props.onFinished && this.props.onFinished(data, this);
-				if(_return !== false) {
-					this.setState({
-						loading: false,
-						data: data
-					});
-					_after && _after(sender, data);
+			after: function (sender, response){
+				var _return = this.props.onFinished && this.props.onFinished(response, this);
+				if(_return === false) {
+					return false;
 				}
+				var _data = response,
+					_result = this.props.responseHandler && this.props.responseHandler(response, this);
+				if(_result === false){
+					return false;
+				}
+				if(_result) {
+					_data = _result;
+				}
+				this.setState({
+					loading: false,
+					data: _data
+				});
+				_after && _after(sender, _data);
 			}.bind(this)
 		}), this.props.context);
 		this.props.onDataCreated && this.props.onDataCreated(_data, this);
