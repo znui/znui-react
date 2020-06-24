@@ -38,14 +38,14 @@ module.exports = zn.Class({
     },
     __initConfig: function __initConfig(config) {
       if (config) {
-        if (config.$development && config.$production) {
+        if (config.$development || config.$production || config.$stage) {
           this._config = config['$' + (process.env.NODE_ENV || 'production')];
         } else {
           this._config = config;
         }
 
         if (this._config) {
-          zn.data.setHost(this._config.HOST || zn.data.host, this._config.PORT || zn.data.port);
+          zn.data.setHost(this._config.host || zn.data.host, this._config.port || zn.data.port);
         }
       }
     },

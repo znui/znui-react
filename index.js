@@ -5,7 +5,9 @@ var createReactClass = require('create-react-class');
 if(React && createReactClass && !React.createClass){
     React.createClass = createReactClass;
 }
-var znui = window.znui;
+var znui = window.znui,
+    name = require('./package.json').name;
+
 if(!znui) {
     if(process && process.env && process.env.NODE_ENV) {
         if(process.env.NODE_ENV == 'development') {
@@ -39,6 +41,8 @@ window.zr = {
         return this.__zr__["_" + key + "_"];
     }
 };
+
+zn.info('component loaded: ', name);
 
 if(process && process.env && process.env.NODE_ENV) {
     if(process.env.NODE_ENV == 'development') {
