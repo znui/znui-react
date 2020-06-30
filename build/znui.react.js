@@ -13,6 +13,7 @@ module.exports = znui.react = {
   Lifecycle: require('./Lifecycle'),
   Session: require('./Session'),
   Storage: require('./Storage'),
+  Render: require('./Render'),
   loadedComponents: {},
   "import": function _import(name) {
     if (znui.react.loadedComponents[name]) {
