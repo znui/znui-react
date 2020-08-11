@@ -17,8 +17,17 @@ module.exports = znui.react = {
             return require(name);
         }
     },
-    createApplication: function (args){
-        return new Application(args);
+    createApplication: function (){
+        var _argv = arguments,
+            _app = null;
+        if(_argv.length == 1 && typeof _argv[0] == 'object'){
+            _app = new Application(_argv[0]);
+        }else if(_argv.length == 2 && typeof _argv[0] == 'string' && typeof _argv[1] == 'object'){
+            _app = new Application(_argv[1]);
+            zn.path(window, _argv[0], _app);
+        }
+
+        return _app;
     },
     createReactElement: function (argv, options){
         if(!argv) {

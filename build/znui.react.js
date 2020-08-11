@@ -22,8 +22,18 @@ module.exports = znui.react = {
       return require(name);
     }
   },
-  createApplication: function createApplication(args) {
-    return new Application(args);
+  createApplication: function createApplication() {
+    var _argv = arguments,
+        _app = null;
+
+    if (_argv.length == 1 && _typeof(_argv[0]) == 'object') {
+      _app = new Application(_argv[0]);
+    } else if (_argv.length == 2 && typeof _argv[0] == 'string' && _typeof(_argv[1]) == 'object') {
+      _app = new Application(_argv[1]);
+      zn.path(window, _argv[0], _app);
+    }
+
+    return _app;
   },
   createReactElement: function createReactElement(argv, options) {
     if (!argv) {
