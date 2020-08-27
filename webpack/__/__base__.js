@@ -1,6 +1,7 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var argv = zn.convertArrayArgv(process.argv).argv;
 var node_path = require('path');
+var node_env = process.env.NODE_ENV;
 
 var __ = {
     alias: function (){
@@ -14,14 +15,19 @@ var __ = {
 
         var _package = require(node_path.resolve(_cwd, './package.json')),
             _devDeps = _package.devDependencies || _package.dependencies || {},
-            _alias = {};
+            _alias = {},
+            _file = null;
         for(var key in _devDeps) {
+            _file = key;
+            if(node_env == 'development') {
+                _file = _file + '/development.js';
+            }
             if(_prefix){
                 if(key.indexOf(_prefix) != -1) {
-                    _alias[key] = node_path.resolve(_cwd, _path, key);
+                    _alias[key] = node_path.resolve(_cwd, _path, _file);
                 }
             }else{
-                _alias[key] = node_path.resolve(_cwd, _path, key);
+                _alias[key] = node_path.resolve(_cwd, _path, _file);
             }
         }
 

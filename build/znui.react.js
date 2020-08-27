@@ -11,10 +11,40 @@ module.exports = znui.react = {
   DataLifecycle: require('./DataLifecycle'),
   DataView: require('./DataView'),
   Lifecycle: require('./Lifecycle'),
-  Session: require('./Session'),
-  Storage: require('./Storage'),
+  Session: require('./ZRSession'),
+  Storage: require('./ZRStorage'),
   Render: require('./Render'),
   loadedComponents: {},
+  setting: {},
+  stringifyFileSize: function stringifyFileSize(value) {
+    if (typeof value != 'string') {
+      value = +value;
+    }
+
+    if (typeof value != 'number') {
+      return 'NaN';
+    }
+
+    if (value < 1024) {
+      return value + 'B';
+    }
+
+    if (value < 1024 * 1024) {
+      return (value / 1024).toFixed(2) + 'KB';
+    }
+
+    if (value < 1024 * 1024 * 1024) {
+      return (value / (1024 * 1024)).toFixed(2) + 'MB';
+    }
+
+    if (value < 1024 * 1024 * 1024 * 1024 * 1024) {
+      return (value / (1024 * 1024 * 1024)).toFixed(2) + 'GB';
+    }
+
+    if (value < 1024 * 1024 * 1024 * 1024 * 1024 * 1024) {
+      return (value / (1024 * 1024 * 1024 * 1024)).toFixed(2) + 'TB';
+    }
+  },
   "import": function _import(name) {
     if (znui.react.loadedComponents[name]) {
       return znui.react.loadedComponents[name];
@@ -29,8 +59,8 @@ module.exports = znui.react = {
     if (_argv.length == 1 && _typeof(_argv[0]) == 'object') {
       _app = new Application(_argv[0]);
     } else if (_argv.length == 2 && typeof _argv[0] == 'string' && _typeof(_argv[1]) == 'object') {
+      _argv[1].namespace = _argv[0];
       _app = new Application(_argv[1]);
-      zn.path(window, _argv[0], _app);
     }
 
     return _app;

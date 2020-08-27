@@ -2,7 +2,6 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin"),
     CopyWebpackPlugin = require('copy-webpack-plugin'),
     node_path = require('path'),
     cwd = process.cwd();
-    
 module.exports = {
     devtool: 'inline-source-map',
     plugins: [

@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "description": "znui react is the front-end basic framework.",
   "main": "index.js",
   "repository": {
@@ -44,6 +44,7 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^5.1.0",
     "html-webpack-plugin": "^3.2.0",
+    "jsonwebtoken": "^8.5.1",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",

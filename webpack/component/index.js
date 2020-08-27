@@ -4,6 +4,10 @@ module.exports = {
     development: function (options){
         return this.mode('development', options);
     },
+    developmentStyle: function (options){
+        options.config = 'development.style.js';
+        return this.mode('development', options);
+    },
     production: function (options){
         return this.mode('production', options);
     },
@@ -23,7 +27,7 @@ module.exports = {
     },
     mode: function (mode, options){
         var _options = {},
-            _config = zn.deepAssigns({}, __.mode(mode), __component__(mode), require('./' + mode));
+            _config = zn.deepAssigns({}, __.mode(mode), __component__(mode), require('./' + ((options||{}).config || mode)));
         switch(zn.type(options)) {
             case "object":
                 _options = options;

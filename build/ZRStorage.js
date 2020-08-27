@@ -12,10 +12,10 @@ module.exports = zn.Class({
   },
   methods: {
     init: function init(argv, application) {
-      argv = zn.extend({
-        data: {}
-      }, argv);
-      this.sets(argv);
+      argv = argv || {};
+      this._data = argv.data || {};
+      this._prefix = argv.prefix || 'ZNUI_REACT_';
+      this._engine = argv.engine || 'localStorage';
       this._application = application;
 
       this.__initEngine(this._engine);

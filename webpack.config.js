@@ -26,7 +26,8 @@ module.exports = {
         "create-react-class": "createReactClass",
         "react": "React",
         "react-dom": "ReactDOM",
-        "znui": "znui"
+        "znui": "znui",
+        "jsonwebtoken": "jsonwebtoken"
     },
     output: {
         path: path.join(process.cwd(), 'dist'),

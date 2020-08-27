@@ -4,9 +4,9 @@ var React = znui.React || require('react');
 
 var ReactDOM = znui.ReactDOM || require('react-dom');
 
-var Session = require('./Session.js');
+var ZRSession = require('./ZRSession.js');
 
-var Storage = require('./Storage.js');
+var ZRStorage = require('./ZRStorage.js');
 
 module.exports = zn.Class({
   events: ['init', 'update', 'render'],
@@ -22,9 +22,16 @@ module.exports = zn.Class({
   methods: {
     init: function init(argv, events) {
       argv = zn.extend({}, argv);
+
+      if (argv.namespace) {
+        zn.path(window, argv.namespace, this);
+      }
+
       this.sets(argv);
+      this._data = {};
       this._components = this.__initComponents(argv.components);
-      this._storage = new Storage(argv.storage);
+      this._storage = new ZRStorage(argv.storage, this);
+      this._session = new ZRSession(argv.session, this);
 
       this.__initConfig(argv.config);
 
@@ -98,9 +105,15 @@ module.exports = zn.Class({
       this.fire('render', view);
       return ReactDOM.render(React.createElement(React.Fragment, null, this.__getRender(view), this.__getGlobalRender()), this.__getContainer()), this;
     },
-    createSession: function createSession(argv, _session) {
+    setValue: function setValue(key, value) {
+      return this._data[key] = value, this;
+    },
+    getValue: function getValue(key) {
+      return this._data[key];
+    },
+    createSession: function createSession(argv, SessionClass) {
       if (argv) {
-        var _Session = Session || _session;
+        var _Session = ZRSession || SessionClass;
 
         return this._session = new _Session(argv, this), this._session;
       }

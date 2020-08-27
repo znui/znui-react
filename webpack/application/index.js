@@ -20,7 +20,6 @@ module.exports = {
         var _mode = mode || 'development',
             _options = {},
             _config = zn.deepAssigns({ }, __.mode(_mode), __application__(), require('./' + _mode + '.js'));
-
         switch(zn.type(options)) {
             case "object":
                 _options = options;

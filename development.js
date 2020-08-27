@@ -5,10 +5,11 @@ var createReactClass = require('create-react-class');
 if(React && createReactClass && !React.createClass){
     React.createClass = createReactClass;
 }
-var znui = window.znui;
+var znui = window.znui,
+    name = require('./package.json').name;
 
 if(!znui) {
-    znui = window.znui = require('znui');
+    znui = window.znui = require('../znui');
 }
 znui.React = React;
 znui.ReactDOM = ReactDOM;
@@ -34,4 +35,5 @@ window.zr = {
     }
 };
 
-module.exports = require('./dist/znui.react.js');
+zn.trace('component loaded: ', name);
+module.exports = require('./build/znui.react.js');
