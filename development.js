@@ -35,5 +35,4 @@ window.zr = {
     }
 };
 
-zn.trace('component loaded: ', name);
 module.exports = require('./build/znui.react.js');
