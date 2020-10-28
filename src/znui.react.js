@@ -52,9 +52,13 @@ module.exports = znui.react = {
             _app = null;
         if(_argv.length == 1 && typeof _argv[0] == 'object'){
             _app = new Application(_argv[0]);
-        }else if(_argv.length == 2 && typeof _argv[0] == 'string' && typeof _argv[1] == 'object'){
-            _argv[1].namespace = _argv[0];
-            _app = new Application(_argv[1]);
+        }else if(_argv.length == 2){
+            if(typeof _argv[0] == 'string' && typeof _argv[1] == 'object'){
+                _argv[1].namespace = _argv[0];
+                _app = new Application(_argv[1]);
+            }else if(typeof _argv[0] == 'object' && typeof _argv[1] == 'object'){
+                _app = new Application(_argv[0], _argv[1]);
+            }
         }
 
         return _app;
@@ -85,10 +89,9 @@ module.exports = znui.react = {
 					_render = zn.path(window, _render);
 				}
                 if(_render) {
-                    return znui.react.createReactElement(_render, zn.deepAssigns({}, argv, options, {
-                        component: null,
-                        render: null
-                    }));
+                    delete argv.component;
+                    delete argv.render;
+                    return znui.react.createReactElement(_render, zn.extend({}, argv, options));
                 }
                 break;
             case "array":

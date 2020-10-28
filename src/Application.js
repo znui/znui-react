@@ -3,7 +3,7 @@ var ReactDOM = znui.ReactDOM || require('react-dom');
 var ZRSession = require('./ZRSession.js');
 var ZRStorage = require('./ZRStorage.js');
 module.exports = zn.Class({
-    events: ['init', 'update', 'render'],
+    events: ['initial', 'update', 'render'],
     properties: {
         container: 'zr-container',
         components: null,
@@ -16,6 +16,7 @@ module.exports = zn.Class({
     methods: {
         init: function (argv, events){
             argv = zn.extend({}, argv);
+            znui.react.currentApplication = this;
             if(argv.namespace){
                 zn.path(window, argv.namespace, this);
             }
@@ -26,7 +27,7 @@ module.exports = zn.Class({
             this._session = new ZRSession(argv.session, this);
             this.__initConfig(argv.config);
             this.__initEvents(events || {});
-            var _value = this.fire('init', argv);
+            var _value = this.fire('initial', argv);
             if(_value !== false){
                 this.update(_value);
             }
@@ -39,7 +40,8 @@ module.exports = zn.Class({
                     this._config = config;
                 }
                 if(this._config) {
-                    zn.data.setHost(this._config.host || zn.data.host, this._config.port || zn.data.port);
+                    zn.http.setHost(this._config.host || zn.setting.path('zn.data.host'), this._config.port || zn.setting.path('zn.data.port'));
+                    zn.data.setHost(this._config.host || zn.setting.path('zn.data.host'), this._config.port || zn.setting.path('zn.data.port'));
                 }
             }
         },

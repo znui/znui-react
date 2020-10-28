@@ -15,6 +15,7 @@ module.exports = zn.Class({
       argv = argv || {};
       this._data = argv.data || {};
       this._prefix = argv.prefix || 'ZNUI_REACT_';
+      this._tokenKey = argv.tokenKey || 'znui.app.token';
       this._engine = argv.engine || 'localStorage';
       this._application = application;
 
@@ -45,6 +46,12 @@ module.exports = zn.Class({
     getEngine: function getEngine() {
       return this._engine;
     },
+    setToken: function setToken(value) {
+      return this.setItem(this._tokenKey, value), this;
+    },
+    getToken: function getToken(ifJSONParse) {
+      return this.getItem(this._tokenKey, ifJSONParse);
+    },
     setPrefix: function setPrefix(prefix) {
       return this._prefix = prefix, this;
     },
@@ -52,12 +59,30 @@ module.exports = zn.Class({
       return this._prefix;
     },
     setItem: function setItem(key, value, timeout) {
+      key = this._prefix + (key || '');
       return this.getEngine().setItem(key, _typeof(value) == 'object' ? JSON.stringify(value) : value, timeout), this;
     },
-    getItem: function getItem(key) {
-      return this.getEngine().getItem(key);
+    getItem: function getItem(key, ifJSONParse) {
+      key = this._prefix + (key || '');
+
+      var _value = this.getEngine().getItem(key);
+
+      if (ifJSONParse !== false) {
+        ifJSONParse = true;
+      }
+
+      if (ifJSONParse && _value) {
+        try {
+          return JSON.parse(_value);
+        } catch (err) {
+          return {};
+        }
+      }
+
+      return _value;
     },
     removeItem: function removeItem(key) {
+      key = this._prefix + (key || '');
       return this.getEngine().removeItem(key), this;
     },
     getJSONValue: function getJSONValue(value) {
@@ -68,7 +93,7 @@ module.exports = zn.Class({
           _value = JSON.parse(_value);
         } catch (e) {
           _value = {};
-          console.log(e.stack);
+          console.error(e.stack);
         }
       }
 
