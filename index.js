@@ -1,6 +1,7 @@
+require('./dist/znui.react.style.css');
 var React = require('react');
 var ReactDOM = require('react-dom');
-var axios = require('axios');
+var axios = require('axios/dist/axios.min.js');
 var createReactClass = require('create-react-class');
 if(React && createReactClass && !React.createClass){
     React.createClass = createReactClass;
@@ -15,6 +16,7 @@ znui.ReactDOM = ReactDOM;
 if(axios){
     znui.axios = axios;
     znui.axios.defaults.withCredentials = true;
+    znui.axios.defaults.timeout = 20000;
     if(zn.data && zn.data.setCaller) zn.data.setCaller(axios);
 }
 

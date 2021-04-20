@@ -1,3 +1,4 @@
+require('./dist/znui.react.style.css');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var axios = require('axios');
@@ -5,9 +6,7 @@ var createReactClass = require('create-react-class');
 if(React && createReactClass && !React.createClass){
     React.createClass = createReactClass;
 }
-var znui = window.znui,
-    name = require('./package.json').name;
-
+var znui = window.znui, name = require('./package.json').name;
 if(!znui) {
     znui = window.znui = require('../znui');
 }

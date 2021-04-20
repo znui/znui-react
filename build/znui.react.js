@@ -1,5 +1,7 @@
 "use strict";
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var React = znui.React || require('react');
@@ -14,6 +16,7 @@ module.exports = znui.react = {
   Session: require('./ZRSession'),
   Storage: require('./ZRStorage'),
   Render: require('./Render'),
+  R: require('./znui.react.R'),
   loadedComponents: {},
   setting: {},
   stringifyFileSize: function stringifyFileSize(value) {
@@ -45,12 +48,122 @@ module.exports = znui.react = {
       return (value / (1024 * 1024 * 1024 * 1024)).toFixed(2) + 'TB';
     }
   },
+  axiosUse: function axiosUse(req, res) {
+    if (!znui.axios) return this;
+
+    var _request = zn.extend(req, {
+      config: function config(_config) {
+        var _token = znui.react.currentApplication.storage.getToken();
+
+        if (_token && _token.user) {
+          _config.headers['X-CSRF-Token'] = _token.user.csrfToken;
+        }
+
+        return _config;
+      },
+      error: function error(err) {
+        return zn.error(err), Promise.reject(err);
+      }
+    });
+
+    var _response = zn.extend(res, {
+      response: function response(_response2) {
+        zr.popup.loader.close();
+
+        if (_response2.status !== 200) {
+          return zr.popup.notifier.error(znui.react.R.CODE_MESSAGE[_response2.status]), null;
+        }
+
+        if (!_response2.data) {
+          return zr.popup.notifier.error(_response2.responseText), null;
+        }
+
+        switch (_response2.data.code) {
+          case 200:
+            res.on200 && res.on200(_response2.data, _response2);
+            break;
+
+          case 405:
+          case 401:
+            znui.app.storage.clear();
+            res.onLoginInvalid && res.onLoginInvalid(_response2.data, _response2);
+            break;
+
+          default:
+            var _message = null;
+
+            if (_response2.data.result) {
+              if (typeof _response2.data.result == 'string') {
+                _message = _response2.data.result;
+              } else if (_typeof(_response2.data.result) == 'object') {
+                _message = _response2.data.result.message;
+              }
+            } else if (_response2.data.detail) {
+              _message = _response2.data.detail;
+            } else if (_response2.data.message) {
+              _message = _response2.data.message;
+            }
+
+            zr.popup.notifier.error(_message);
+            break;
+        }
+
+        return _response2.data;
+      },
+      error: function error(_error) {
+        zr.popup.loader.close();
+
+        switch (_error.code) {
+          case 'ECONNABORTED':
+            zr.popup.notifier.error('服务请求超时, 请稍后再试');
+            break;
+
+          case 'ERR_CONNECTION_REFUSED':
+            zr.popup.notifier.error('服务器服务不可用');
+            break;
+
+          default:
+            zr.popup.notifier.error(_error.message);
+            break;
+        }
+
+        return Promise.reject(_error), false;
+      }
+    });
+
+    znui.axios.interceptors.request.use(_request.config, _request.error);
+    znui.axios.interceptors.response.use(_response.response, _response.error);
+    return this;
+  },
   "import": function _import(name) {
     if (znui.react.loadedComponents[name]) {
       return znui.react.loadedComponents[name];
     } else {
       return require(name);
     }
+  },
+  loadComponents: function loadComponents(namespace, components) {
+    return zn.path(window, namespace, components);
+  },
+  loadR: function loadR() {
+    for (var i = 0, _len = arguments.length; i < _len; i++) {
+      if (arguments[i]) {
+        zn.extend(znui.react.R, arguments[i]);
+      }
+    }
+
+    return this;
+  },
+  objectToArrayData: function objectToArrayData(obj, valueKey, textKey) {
+    var _data = [];
+
+    for (var key in obj) {
+      var _data$push;
+
+      _data.push((_data$push = {}, _defineProperty(_data$push, valueKey || 'value', key), _defineProperty(_data$push, textKey || 'text', obj[key]), _data$push));
+    }
+
+    return _data;
   },
   createApplication: function createApplication() {
     var _argv = arguments,
@@ -69,27 +182,46 @@ module.exports = znui.react = {
 
     return _app;
   },
-  createReactElement: function createReactElement(argv, options) {
+  isReactComponent: function isReactComponent(argv) {
+    if (argv && _typeof(argv) === 'object' && (argv.$$typeof || argv.isReactComponent)) {
+      return true;
+    }
+
+    return false;
+  },
+  createReactElement: function createReactElement(argv, options, context) {
     if (!argv) {
       return null;
     }
 
-    if (argv && _typeof(argv) === 'object' && (argv.$$typeof || argv.isReactComponent)) {
+    if (this.isReactComponent(argv)) {
       return argv;
     }
+    /*
+    if(argv && typeof argv === 'object' && (argv.$$typeof || argv.isReactComponent)){
+        return argv;
+    }*/
+
 
     switch (zn.type(argv)) {
       case "function":
         if (argv.prototype && argv.prototype.render) {
           return znui.React.createElement(argv, options);
         } else {
-          argv = argv(options);
+          var _context = context || options.context || null;
 
-          if (argv && _typeof(argv) === 'object' && argv.$$typeof) {
+          argv = argv.call(_context, options);
+
+          if (this.isReactComponent(argv)) {
             return argv;
-          } else {
-            return;
           }
+          /*
+          if(argv && typeof argv === 'object' && argv.$$typeof){
+              return argv;
+          }else{
+              return;
+          }*/
+
         }
 
         break;

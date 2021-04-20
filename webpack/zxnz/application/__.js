@@ -79,12 +79,32 @@ var __ = {
         if(node_fs.existsSync(node_path.resolve(_cwd, _data))) {
             _htmlwebpackplugin = zn.deepAssign(_htmlwebpackplugin, require(node_path.resolve(_cwd, _data)));
         }
+        
+        if(_htmlwebpackplugin.links) {
+            var _copys = [],
+                _link = null;
+            for(var key in _htmlwebpackplugin.links) {
+                _link = _htmlwebpackplugin.links[key];
+                if(_link.indexOf('./') != 0 && _link.indexOf('../') != 0) {
+                    _copys.push({
+                        from: node_path.resolve(_link),
+                        to: node_path.resolve(_output, './externals/' + key + '.css'),
+                        force: true
+                    });
+                    _htmlwebpackplugin.links[key] = './externals/' + key + '.css';
+                }
+            }
+            if(_copys.length){
+                _config.plugins.push(new CopyWebpackPlugin(_copys));
+            }
+        }
+
         if(_htmlwebpackplugin.externals) {
             var _copys = [],
                 _external = null;
             for(var key in _htmlwebpackplugin.externals) {
                 _external = _htmlwebpackplugin.externals[key];
-                if(_external.indexOf('./') != 0) {
+                if(_external.indexOf('./') != 0 && _external.indexOf('../') != 0) {
                     _copys.push({
                         from: node_path.resolve(_external),
                         to: node_path.resolve(_output, './externals/' + key + '.js'),

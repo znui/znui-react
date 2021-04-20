@@ -9,6 +9,7 @@ module.exports = znui.react = {
     Session: require('./ZRSession'),
     Storage: require('./ZRStorage'),
     Render: require('./Render'),
+    R: require('./znui.react.R'),
     loadedComponents: {},
     setting: {},
     stringifyFileSize: function (value){
@@ -40,12 +41,111 @@ module.exports = znui.react = {
             return (value / (1024 * 1024 * 1024 * 1024)).toFixed(2) +'TB';
         }
     },
+    axiosUse: function (req, res){
+        if(!znui.axios) return this;
+        var _request = zn.extend(req, {
+            config: function (config) {
+                var _token = znui.react.currentApplication.storage.getToken();
+                if(_token && _token.user) {
+                    config.headers['X-CSRF-Token'] = _token.user.csrfToken;
+                }
+                
+                  return config;
+            },
+            error: function (err) {
+                return zn.error(err), Promise.reject(err);
+            }
+        });
+        var _response = zn.extend(res, {
+            response: function (response){
+                zr.popup.loader.close();
+                if(response.status !== 200) {
+                    return zr.popup.notifier.error(znui.react.R.CODE_MESSAGE[response.status]), null;
+                }
+                if(!response.data) {
+                    return zr.popup.notifier.error(response.responseText), null;
+                }
+                switch(response.data.code) {
+                    case 200:
+                        res.on200 && res.on200(response.data, response);
+                        break;
+                    case 405:
+                    case 401:
+                        znui.app.storage.clear();
+                        res.onLoginInvalid && res.onLoginInvalid(response.data, response);
+                        break;
+                    default:
+                        var _message = null;
+                        if(response.data.result) {
+                            if(typeof response.data.result == 'string'){
+                                _message = response.data.result;
+                            }else if(typeof response.data.result == 'object'){
+                                _message = response.data.result.message;
+                            }
+                        }else if(response.data.detail){
+                            _message = response.data.detail;
+                        }else if(response.data.message){
+                            _message = response.data.message;
+                        }
+            
+                        zr.popup.notifier.error(_message);
+                        break;
+                }
+            
+                return response.data;
+            },
+            error: function (error){
+                zr.popup.loader.close();
+                switch(error.code) {
+                    case 'ECONNABORTED':
+                        zr.popup.notifier.error('服务请求超时, 请稍后再试');
+                        break;
+                    case 'ERR_CONNECTION_REFUSED':
+                        zr.popup.notifier.error('服务器服务不可用');
+                        break;
+                    default:
+                        zr.popup.notifier.error(error.message);
+                        break;
+                }
+            
+                return Promise.reject(error), false;
+            }
+        });
+
+        znui.axios.interceptors.request.use(_request.config, _request.error);
+        znui.axios.interceptors.response.use(_response.response, _response.error);
+
+        return this;
+    },
     import: function (name){
         if(znui.react.loadedComponents[name]){
             return znui.react.loadedComponents[name];
         }else{
             return require(name);
         }
+    },
+    loadComponents: function (namespace, components){
+        return zn.path(window, namespace, components);
+    },
+    loadR: function (){
+        for(var i = 0, _len = arguments.length; i < _len; i++){
+            if(arguments[i]){
+                zn.extend(znui.react.R, arguments[i]);
+            }
+        }
+
+        return this;
+    },
+    objectToArrayData: function (obj, valueKey, textKey){
+        var _data = [];
+        for(var key in obj){
+            _data.push({
+                [valueKey||'value']: key,
+                [textKey||'text']: obj[key]
+            });
+        }
+
+        return _data;
     },
     createApplication: function (){
         var _argv = arguments,
@@ -63,24 +163,40 @@ module.exports = znui.react = {
 
         return _app;
     },
-    createReactElement: function (argv, options){
+    isReactComponent: function (argv){
+        if(argv && typeof argv === 'object' && (argv.$$typeof || argv.isReactComponent)){
+            return true;
+        }
+
+        return false;
+    },
+    createReactElement: function (argv, options, context){
         if(!argv) {
             return null;
         }
-        if(argv && typeof argv === 'object' && (argv.$$typeof || argv.isReactComponent)){
+        if(this.isReactComponent(argv)){
             return argv;
         }
+        /*
+        if(argv && typeof argv === 'object' && (argv.$$typeof || argv.isReactComponent)){
+            return argv;
+        }*/
         switch(zn.type(argv)){
             case "function":
                 if(argv.prototype && argv.prototype.render) {
                     return znui.React.createElement(argv, options);
                 }else{
-                    argv = argv(options);
+                    var _context = context || options.context || null;
+                    argv = argv.call(_context, options);
+                    if(this.isReactComponent(argv)){
+                        return argv;
+                    }
+                    /*
                     if(argv && typeof argv === 'object' && argv.$$typeof){
                         return argv;
                     }else{
                         return;
-                    }
+                    }*/
                 }
                 break;
             case "object":

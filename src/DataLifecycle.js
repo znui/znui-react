@@ -74,7 +74,7 @@ module.exports = React.createClass({
 	render: function(){
 		var _data = this.state.data,
 			_default = <></>;
-		if(this.state.loading){
+		if(this.state.loading && this.props.loadingEnabled !== false){
 			var _return = this.props.loadingRender && this.props.loadingRender(this);
 			if(!_return && this.props.loadingLabel && znui.react.Render.Loading){
 				_return = <znui.react.Render.Loading label={this.props.loadingLabel} />;

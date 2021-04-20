@@ -20,6 +20,7 @@ module.exports = {
     mode: process.env.NODE_ENV || 'production',
     entry: {
         "znui.react": './znui.react.js',
+        "znui.react.style": './znui.react.less'
     },
     externals: {
         "axios": "axios",
