@@ -18,7 +18,56 @@ module.exports = znui.react = {
   Render: require('./Render'),
   R: require('./znui.react.R'),
   loadedComponents: {},
-  setting: {},
+  setting: {
+    _data_: {}
+  },
+  resolveArrayResult: function resolveArrayResult(response) {
+    if (zn.is(response, 'array')) {
+      return response;
+    }
+
+    if (zn.is(response, 'object')) {
+      if (response.status == 200 && _typeof(response.data) == 'object' && response.data.code == 200 && zn.is(response.data.result, 'array')) {
+        return response.data.result;
+      }
+
+      if (response.code == 200 && _typeof(response.result) == 'object') {
+        return response.result;
+      }
+    }
+  },
+  stringifyNumber: function stringifyNumber(value) {
+    if (typeof value != 'string') {
+      value = +value;
+    }
+
+    if (typeof value != 'number') {
+      return 'NaN';
+    }
+
+    value = parseFloat(value);
+    return value.toLocaleString();
+  },
+  stringifyPrice: function stringifyPrice(value) {
+    if (typeof value != 'string') {
+      value = +value;
+    }
+
+    if (typeof value != 'number') {
+      return 'NaN';
+    }
+
+    value = parseFloat(value.toFixed(2));
+
+    var _fixed = value.toFixed(2).split('.')[1],
+        _value = value.toLocaleString();
+
+    if (_value.indexOf('.') == -1) {
+      _value = _value + '.' + _fixed;
+    }
+
+    return _value;
+  },
   stringifyFileSize: function stringifyFileSize(value) {
     if (typeof value != 'string') {
       value = +value;
@@ -46,6 +95,24 @@ module.exports = znui.react = {
 
     if (value < 1024 * 1024 * 1024 * 1024 * 1024 * 1024) {
       return (value / (1024 * 1024 * 1024 * 1024)).toFixed(2) + 'TB';
+    }
+  },
+  removeQueryString: function removeQueryString() {
+    var url = window.location.href;
+
+    if (url.indexOf("?") != -1) {
+      url = url.replace(/(\?|#)[^'"]*/, '');
+      window.history.pushState({}, 0, url);
+    }
+  },
+  isWeChatClient: function isWeChatClient() {
+    var _ua = window.navigator.userAgent.toLowerCase(); //mozilla/5.0 (iphone; cpu iphone os 9_1 like mac os x) applewebkit/601.1.46 (khtml, like gecko)version/9.0 mobile/13b143 safari/601.1
+
+
+    if (_ua.match(/MicroMessenger/i) == 'micromessenger') {
+      return true;
+    } else {
+      return false;
     }
   },
   axiosUse: function axiosUse(req, res) {
@@ -96,7 +163,7 @@ module.exports = znui.react = {
               if (typeof _response2.data.result == 'string') {
                 _message = _response2.data.result;
               } else if (_typeof(_response2.data.result) == 'object') {
-                _message = _response2.data.result.message;
+                _message = _response2.data.result.message || _response2.data.result.errmsg;
               }
             } else if (_response2.data.detail) {
               _message = _response2.data.detail;
@@ -212,7 +279,7 @@ module.exports = znui.react = {
 
           argv = argv.call(_context, options);
 
-          if (this.isReactComponent(argv)) {
+          if (this.isReactComponent(argv) || argv !== null) {
             return argv;
           }
           /*

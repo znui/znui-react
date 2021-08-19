@@ -11,7 +11,49 @@ module.exports = znui.react = {
     Render: require('./Render'),
     R: require('./znui.react.R'),
     loadedComponents: {},
-    setting: {},
+    setting: {
+        _data_: {},
+
+    },
+    resolveArrayResult: function (response){
+        if(zn.is(response, 'array')){
+            return response;
+        }
+        if(zn.is(response, 'object')){
+            if(response.status==200 && typeof response.data == 'object' && response.data.code == 200 && zn.is(response.data.result, 'array')){
+                return response.data.result;
+            }
+            if(response.code==200 && typeof response.result == 'object'){
+                return response.result;
+            }
+        }
+    },
+    stringifyNumber: function (value){
+        if(typeof value != 'string'){
+            value = +value;
+        }
+        if(typeof value != 'number'){
+            return 'NaN';
+        }
+        value = parseFloat(value);
+
+        return  value.toLocaleString();
+    },
+    stringifyPrice: function (value){
+        if(typeof value != 'string'){
+            value = +value;
+        }
+        if(typeof value != 'number'){
+            return 'NaN';
+        }
+        value = parseFloat(value.toFixed(2));
+        var _fixed = value.toFixed(2).split('.')[1], _value = value.toLocaleString();
+        if(_value.indexOf('.') == -1){
+            _value = _value + '.' + _fixed;
+        }
+
+        return  _value;
+    },
     stringifyFileSize: function (value){
         if(typeof value != 'string'){
             value = +value;
@@ -39,6 +81,22 @@ module.exports = znui.react = {
 
         if(value < 1024 * 1024 * 1024 * 1024 * 1024 * 1024){
             return (value / (1024 * 1024 * 1024 * 1024)).toFixed(2) +'TB';
+        }
+    },
+    removeQueryString: function (){
+        var url = window.location.href;
+		if (url.indexOf("?") != -1) {
+	       url = url.replace(/(\?|#)[^'"]*/, '');
+	       window.history.pushState({}, 0, url);
+		}
+    },
+    isWeChatClient: function () {
+        var _ua = window.navigator.userAgent.toLowerCase();
+        //mozilla/5.0 (iphone; cpu iphone os 9_1 like mac os x) applewebkit/601.1.46 (khtml, like gecko)version/9.0 mobile/13b143 safari/601.1
+        if (_ua.match(/MicroMessenger/i) == 'micromessenger') {
+            return true;
+        } else {
+            return false;
         }
     },
     axiosUse: function (req, res){
@@ -80,7 +138,7 @@ module.exports = znui.react = {
                             if(typeof response.data.result == 'string'){
                                 _message = response.data.result;
                             }else if(typeof response.data.result == 'object'){
-                                _message = response.data.result.message;
+                                _message = response.data.result.message || response.data.result.errmsg;
                             }
                         }else if(response.data.detail){
                             _message = response.data.detail;
@@ -188,7 +246,7 @@ module.exports = znui.react = {
                 }else{
                     var _context = context || options.context || null;
                     argv = argv.call(_context, options);
-                    if(this.isReactComponent(argv)){
+                    if(this.isReactComponent(argv) || argv !== null){
                         return argv;
                     }
                     /*

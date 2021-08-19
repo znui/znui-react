@@ -25,11 +25,13 @@
 }
 
 .znui-react-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: #efe9e9;
     padding: 2px 4px;
     margin: 2px 4px;
-    line-height: 22px;
-    display: inline-block;
+    line-height: 16px;
     color: #3498db;
     .fa{
         padding: 3px;
@@ -123,3 +125,240 @@
         }
     }
 }
+
+.zr {
+
+}
+
+.zr-hide {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+}
+
+.zr-tal {
+    text-align: left !important;
+}
+
+.zr-tac {
+    text-align: center !important;
+}
+
+.zr-tar {
+    text-align: right !important;
+}
+
+.zr-margin-1{
+    margin: 1px;
+}
+
+.zr-padding-1{
+    padding: 1px;
+}
+
+.zr-padding-0-1{
+    padding: 0px 1px;
+}
+
+.zr-margin-3{
+    margin: 3px;
+}
+
+.zr-padding-3{
+    padding: 3px;
+}
+
+.zr-padding-0-3{
+    padding: 0px 3px;
+}
+
+.zr-margin-5{
+    margin: 5px;
+}
+
+.zr-padding-5{
+    padding: 5px;
+}
+
+.zr-padding-0-5{
+    padding: 0px 5px;
+}
+
+.zr-fl {
+    float: left !important;
+}
+
+.zr-fr {
+    float: right !important;
+}
+
+.zr-show {
+    display: block !important;
+}
+
+.zr-clearfix {
+    display: inline-block;
+    height: 1%;
+    &::after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+}
+
+.zr-no-data{
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+    line-height: 40px;
+}
+
+.zr-tip-warning{
+    text-align: center;
+    background-color: #fbff12;
+    padding: 4px;
+    margin: 5px;
+    font-size: 11px;
+    color: #828282;
+    border-radius: 2px;
+    border: 1px solid #f1f116;
+}
+
+.zr-tip{
+    display: block;
+    text-align: center;
+    background-color: #f0f0ee;
+    padding: 10px;
+    margin: 10px 0px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #828282;
+    border-radius: 2px;
+}
+
+.zr-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* zr-tag */
+.zr-tag-status(@color: #9c9c9c){
+    border-color: @color;
+    color: @color;
+    &.hover{
+        &:hover{
+            background-color: @color;
+            color: #FFF;
+        }
+    }
+
+    &:hover{
+        background-color: @color;
+        color: #FFF;
+    }
+}
+
+.zr-tag{
+    padding: 3px;
+    margin: 3px;
+    border-radius: 3px;
+    font-size: 10px;
+    border: 0.5px solid transparent;
+    cursor: pointer;
+    .fa{
+        padding: 0px 3px;
+    }
+
+    .zr-tag-status(#9c9c9c);
+
+
+    &.black{
+        .zr-tag-status(#000);
+    }
+
+    &.orangle, &.warning{
+        .zr-tag-status(#ee6723);
+    }
+
+    &.primary{
+        .zr-tag-status(#3498db);
+    }
+
+    &.danger{
+        .zr-tag-status(#d9534f);
+    }
+
+    &.ok, &.success{
+        .zr-tag-status(#4CAF50);
+    }
+}
+
+/* zr-note */
+.zr-note {
+    box-sizing: border-box;
+    max-width: 42rem;
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding: 10px;
+    clear: both;
+    clear: none;
+    font-size: 18px;
+    background-color: #eee;
+    border: 5px solid #3f87a6;
+}
+
+.zr-note-warn{
+    background-color: #fff3d4;
+    border-color: #f6b73c;
+}
+
+.zr-note-error{
+    color: #e66e33;
+    background-color: #f4d7c9;
+    border-color: #e66e33;
+}
+
+.zr-note-content{
+    background-color: #eee;
+}
+
+.zr-animation-pulse {
+    -webkit-animation: pulse 2s infinite;
+            animation: pulse 2s infinite;
+  }
+  
+  @-webkit-keyframes pulse {
+    0% {
+      -webkit-box-shadow: 0 0 0 0 rgba(255, 131, 125, 0.4);
+              box-shadow: 0 0 0 0 rgba(255, 131, 125, 0.4);
+    }
+    70% {
+      -webkit-box-shadow: 0 0 0 10px rgba(255, 131, 125, 0);
+              box-shadow: 0 0 0 10px rgba(255, 131, 125, 0);
+    }
+    100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(255, 131, 125, 0);
+              box-shadow: 0 0 0 0 rgba(255, 131, 125, 0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      -webkit-box-shadow: 0 0 0 0 rgba(255, 131, 125, 0.4);
+              box-shadow: 0 0 0 0 rgba(255, 131, 125, 0.4);
+    }
+    70% {
+      -webkit-box-shadow: 0 0 0 10px rgba(255, 131, 125, 0);
+              box-shadow: 0 0 0 10px rgba(255, 131, 125, 0);
+    }
+    100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(255, 131, 125, 0);
+              box-shadow: 0 0 0 0 rgba(255, 131, 125, 0);
+    }
+  }

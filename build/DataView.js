@@ -57,6 +57,10 @@ module.exports = React.createClass({
           return;
         }
 
+        if (zn.is(_data, 'object') && _data.code == 200 && zn.is(_data.result, 'array')) {
+          _data = _data.result;
+        }
+
         this.setState({
           loading: false,
           data: _data
