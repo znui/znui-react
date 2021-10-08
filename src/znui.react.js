@@ -12,8 +12,42 @@ module.exports = znui.react = {
     R: require('./znui.react.R'),
     loadedComponents: {},
     setting: {
-        _data_: {},
+        _data_: {}
+    },
+    arrayToValueMap: function (ary, valueKey, labelKey){
+        if(!zn.is(ary, 'array')){
+            throw new Error('data is not array.');
+        }
+        var _obj = {};
+        var _valueKey = valueKey || 'value', _labelKey = labelKey || 'text';
+        for(var item of ary) {
+            _obj[item[_valueKey]] = item[_labelKey] || item.label || '';
+        }
 
+        return _obj;
+    },
+    getItemFormArrayByValue: function (ary, value){
+        if(!zn.is(ary, 'array')){
+            throw new Error('data is not array.');
+        }
+        for(var item of ary) {
+            if(item.value === value) {
+                return item;
+            }
+        }
+
+        return {};
+    },
+    objectToArray: function (obj){
+        if(!zn.is(obj, 'object')){
+            throw new Error('data is not object.');
+        }
+        var _ary = [];
+        for(var key in obj) {
+            _ary.push({ value: key, label: obj[key], text: obj[key] });
+        }
+
+        return _ary;
     },
     resolveArrayResult: function (response){
         if(zn.is(response, 'array')){
@@ -193,6 +227,15 @@ module.exports = znui.react = {
         }
 
         return this;
+    },
+    createR: function (data, maps){
+        var _data = data || {}, _path = null;
+        for(var key in maps) {
+            _path = (maps[key] || '').split('.');
+            _data[key] = znui.react.arrayToValueMap(zn.path(_data, _path[0]), _path[1], _path[2]);
+        }
+
+        return _data;
     },
     objectToArrayData: function (obj, valueKey, textKey){
         var _data = [];

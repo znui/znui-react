@@ -21,6 +21,93 @@ module.exports = znui.react = {
   setting: {
     _data_: {}
   },
+  arrayToValueMap: function arrayToValueMap(ary, valueKey, labelKey) {
+    if (!zn.is(ary, 'array')) {
+      throw new Error('data is not array.');
+    }
+
+    var _obj = {};
+
+    var _valueKey = valueKey || 'value',
+        _labelKey = labelKey || 'text';
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = ary[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var item = _step.value;
+        _obj[item[_valueKey]] = item[_labelKey] || item.label || '';
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return _obj;
+  },
+  getItemFormArrayByValue: function getItemFormArrayByValue(ary, value) {
+    if (!zn.is(ary, 'array')) {
+      throw new Error('data is not array.');
+    }
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = ary[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var item = _step2.value;
+
+        if (item.value === value) {
+          return item;
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+          _iterator2["return"]();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    return {};
+  },
+  objectToArray: function objectToArray(obj) {
+    if (!zn.is(obj, 'object')) {
+      throw new Error('data is not object.');
+    }
+
+    var _ary = [];
+
+    for (var key in obj) {
+      _ary.push({
+        value: key,
+        label: obj[key],
+        text: obj[key]
+      });
+    }
+
+    return _ary;
+  },
   resolveArrayResult: function resolveArrayResult(response) {
     if (zn.is(response, 'array')) {
       return response;
@@ -220,6 +307,17 @@ module.exports = znui.react = {
     }
 
     return this;
+  },
+  createR: function createR(data, maps) {
+    var _data = data || {},
+        _path = null;
+
+    for (var key in maps) {
+      _path = (maps[key] || '').split('.');
+      _data[key] = znui.react.arrayToValueMap(zn.path(_data, _path[0]), _path[1], _path[2]);
+    }
+
+    return _data;
   },
   objectToArrayData: function objectToArrayData(obj, valueKey, textKey) {
     var _data = [];
