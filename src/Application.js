@@ -31,6 +31,15 @@ module.exports = zn.Class({
             if(_value !== false){
                 this.update(_value);
             }
+
+            /*
+            var _container = this.__getContainer();
+            window.addEventListener('resize', function (){
+                var _wRatio = window.innerWidth / 1920,
+                    _hRatio = window.innerHeight / 1080;
+                console.log(_wRatio, _hRatio);
+                _container.style="transform: scale(" + _wRatio + ", " + _hRatio + "); transform-origin: left top;";
+            });*/
         },
         __initConfig: function (config){
             if(config) {
