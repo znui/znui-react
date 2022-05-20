@@ -17,6 +17,7 @@ module.exports = znui.react = {
   Storage: require('./ZRStorage'),
   Render: require('./Render'),
   R: require('./znui.react.R'),
+  base: require('./znui.react.base'),
   loadedComponents: {},
   setting: {
     _data_: {}
@@ -122,6 +123,19 @@ module.exports = znui.react = {
         return response.result;
       }
     }
+  },
+  timestampToString: function timestampToString(timestamp) {
+    var _date = new Date(timestamp * 1000);
+
+    var _year = _date.getFullYear(),
+        _month = _date.getMonth() + 1,
+        _day = _date.getDate();
+
+    var _hour = _date.getHours(),
+        _minute = _date.getMinutes(),
+        _second = _date.getSeconds();
+
+    return [_year, _month < 10 ? '0' + _month : _month, _day < 10 ? '0' + _day : _day].join('-') + ' ' + [_hour < 10 ? '0' + _hour : _hour, _minute < 10 ? '0' + _minute : _minute, _second < 10 ? '0' + _second : _second].join(':');
   },
   stringifyNumber: function stringifyNumber(value) {
     if (typeof value != 'string') {
@@ -303,6 +317,15 @@ module.exports = znui.react = {
     for (var i = 0, _len = arguments.length; i < _len; i++) {
       if (arguments[i]) {
         zn.extend(znui.react.R, arguments[i]);
+      }
+    }
+
+    return this;
+  },
+  loadBase: function loadBase() {
+    for (var i = 0, _len = arguments.length; i < _len; i++) {
+      if (arguments[i]) {
+        zn.extend(znui.react.base, arguments[i]);
       }
     }
 
