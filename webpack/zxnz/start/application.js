@@ -42,6 +42,10 @@ if(_openPage) {
     devServer.historyApiFallback.index = _openPage;
 }
 
+if(argv.open) {
+    devServer.open = argv.open;
+}
+
 zn.debug('devServer: ', devServer);
 
 module.exports = {

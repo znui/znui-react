@@ -15,7 +15,7 @@ module.exports = React.createClass({
 			_after = _events.after,
 			_error = _events.error;
 		this._data = zn.data.create(_data, zn.extend(_events, {
-			before: function (sender, data){
+			before: (sender, data)=>{
 				if(!this.__isMounted){
 					return;
 				}
@@ -26,8 +26,8 @@ module.exports = React.createClass({
 					loading: true
 				});
 				_before && _before(sender, data);
-			}.bind(this),
-			after: function (sender, data, response, xhr){
+			},
+			after: (sender, data, response, xhr)=>{
 				if(!this.__isMounted){
 					return;
 				}
@@ -56,8 +56,8 @@ module.exports = React.createClass({
 					data: _data
 				});
 				_after && _after(sender, _data, xhr);
-			}.bind(this),
-			error: function (sender, xhr){
+			},
+			error: (sender, xhr)=>{
 				if((this.props.onError && this.props.onError(xhr, this)) === false) {
 					return;
 				}
@@ -65,7 +65,7 @@ module.exports = React.createClass({
 					loading: false
 				});
 				_error && _error(sender, xhr, this);
-			}.bind(this)
+			}
 		}), this.props.context);
 		this.props.onDataCreated && this.props.onDataCreated(this._data, this);
 	},

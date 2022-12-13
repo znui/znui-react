@@ -13,6 +13,7 @@ module.exports = znui.react = {
   DataLifecycle: require('./DataLifecycle'),
   DataView: require('./DataView'),
   Lifecycle: require('./Lifecycle'),
+  Observable: require('./Observable'),
   Session: require('./ZRSession'),
   Storage: require('./ZRStorage'),
   Render: require('./Render'),
@@ -223,8 +224,8 @@ module.exports = znui.react = {
       config: function config(_config) {
         var _token = znui.react.currentApplication.storage.getToken();
 
-        if (_token && _token.user) {
-          _config.headers['X-CSRF-Token'] = _token.user.csrfToken;
+        if (_token && (_token.csrf_token || _token.csrfToken)) {
+          _config.headers['X-CSRF-Token'] = _token.csrf_token || _token.csrfToken;
         }
 
         return _config;
@@ -266,10 +267,10 @@ module.exports = znui.react = {
               } else if (_typeof(_response2.data.result) == 'object') {
                 _message = _response2.data.result.message || _response2.data.result.errmsg;
               }
-            } else if (_response2.data.detail) {
-              _message = _response2.data.detail;
             } else if (_response2.data.message) {
               _message = _response2.data.message;
+            } else if (_response2.data.detail) {
+              _message = _response2.data.detail;
             }
 
             zr.popup.notifier.error(_message);
@@ -322,6 +323,70 @@ module.exports = znui.react = {
 
     return this;
   },
+  loadRData: function loadRData(data, auto) {
+    var _queue = zn.queue(),
+        _size = 0;
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = data[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var item = _step3.value;
+
+        if (item.url) {
+          (function (item) {
+            _size = _size + 1;
+
+            _queue.push(function (task, data) {
+              zn.data.request(item).then(function (response) {
+                if (response.code == 200) {
+                  var _znui$react$createR2;
+
+                  var _result = response.result,
+                      _data_key = item.data_key;
+
+                  var _maps = znui.react.createR(_defineProperty({}, _data_key, _result), (_znui$react$createR2 = {}, _defineProperty(_znui$react$createR2, item.color_key, _data_key + '.value.color'), _defineProperty(_znui$react$createR2, item.text_key, _data_key + '.value.text'), _znui$react$createR2));
+
+                  for (var _key in _maps) {
+                    zn.path(znui.react.R, _key, _maps[_key]);
+                  }
+
+                  task.done(_result);
+                }
+              }, function (err) {
+                task.error(err);
+              });
+            });
+          })(item);
+        }
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+          _iterator3["return"]();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+
+    if (auto === false) {
+      return _queue;
+    }
+
+    if (_size) {
+      _queue.start();
+    }
+
+    return _queue;
+  },
   loadBase: function loadBase() {
     for (var i = 0, _len = arguments.length; i < _len; i++) {
       if (arguments[i]) {
@@ -333,11 +398,22 @@ module.exports = znui.react = {
   },
   createR: function createR(data, maps) {
     var _data = data || {},
-        _path = null;
+        _array = null,
+        _valuePath,
+        _labelPath,
+        _paths = null;
 
     for (var key in maps) {
-      _path = (maps[key] || '').split('.');
-      _data[key] = znui.react.arrayToValueMap(zn.path(_data, _path[0]), _path[1], _path[2]);
+      _paths = (maps[key] || '').split('.');
+      _labelPath = _paths.pop();
+      _valuePath = _paths.pop();
+      _array = zn.path(_data, _paths.join('.')) || _data[_paths.join('.')];
+
+      if (_array) {
+        _data[key] = znui.react.arrayToValueMap(_array, _valuePath, _labelPath);
+      } else {
+        zn.error('参数错误：', _data, _paths.join('.'));
+      }
     }
 
     return _data;

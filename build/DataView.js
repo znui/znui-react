@@ -11,6 +11,8 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
+    var _this = this;
+
     var _events = this.props.events || {},
         _data = this.props.data || [],
         _before = _events.before,
@@ -18,29 +20,30 @@ module.exports = React.createClass({
         _error = _events.error;
 
     this._data = zn.data.create(_data, zn.extend(_events, {
-      before: function (sender, data) {
-        if (!this.__isMounted) {
+      before: function before(sender, data) {
+        if (!_this.__isMounted) {
           return;
         }
 
-        if ((this.props.onLoading && this.props.onLoading(data, this)) === false) {
+        if ((_this.props.onLoading && _this.props.onLoading(data, _this)) === false) {
           return;
         }
 
-        this.setState({
+        _this.setState({
           loading: true
         });
+
         _before && _before(sender, data);
-      }.bind(this),
-      after: function (sender, data, response, xhr) {
-        if (!this.__isMounted) {
+      },
+      after: function after(sender, data, response, xhr) {
+        if (!_this.__isMounted) {
           return;
         }
 
         var _data = data;
 
         if (response) {
-          var _result = this.props.responseHandler && this.props.responseHandler(response, xhr, this);
+          var _result = _this.props.responseHandler && _this.props.responseHandler(response, xhr, _this);
 
           if (_result === false) {
             return;
@@ -51,9 +54,9 @@ module.exports = React.createClass({
           }
         }
 
-        var _onLoaded = this.props.onLoaded || this.props.onFinished;
+        var _onLoaded = _this.props.onLoaded || _this.props.onFinished;
 
-        if ((_onLoaded && _onLoaded(_data, xhr, this)) === false) {
+        if ((_onLoaded && _onLoaded(_data, xhr, _this)) === false) {
           return;
         }
 
@@ -61,22 +64,24 @@ module.exports = React.createClass({
           _data = _data.result;
         }
 
-        this.setState({
+        _this.setState({
           loading: false,
           data: _data
         });
+
         _after && _after(sender, _data, xhr);
-      }.bind(this),
-      error: function (sender, xhr) {
-        if ((this.props.onError && this.props.onError(xhr, this)) === false) {
+      },
+      error: function error(sender, xhr) {
+        if ((_this.props.onError && _this.props.onError(xhr, _this)) === false) {
           return;
         }
 
-        this.setState({
+        _this.setState({
           loading: false
         });
-        _error && _error(sender, xhr, this);
-      }.bind(this)
+
+        _error && _error(sender, xhr, _this);
+      }
     }), this.props.context);
     this.props.onDataCreated && this.props.onDataCreated(this._data, this);
   },

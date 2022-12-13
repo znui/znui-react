@@ -85,5 +85,16 @@ module.exports = {
     }, dialogProps));
 
     return _dialog;
+  },
+  dialog: function dialog(dialogProps) {
+    var _dialog = zr.popup.dialog(zn.deepAssign({
+      style: {
+        width: '80%'
+      },
+      closeable: true,
+      focus: true
+    }, dialogProps));
+
+    return _dialog;
   }
 };
