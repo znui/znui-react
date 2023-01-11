@@ -36,8 +36,9 @@ button, input, textarea, ul, li, form, select{
     align-items: center;
     justify-content: center;
     background-color: #efe9e9;
-    padding: 2px 4px;
+    padding: 2px 2px;
     margin: 2px 4px;
+    min-width: 16px;
     line-height: 16px;
     color: #3498db;
     .fa{
@@ -45,6 +46,23 @@ button, input, textarea, ul, li, form, select{
     }
 }
 
+.znui-react-long-text {
+    padding: 2px;
+    line-height: 16px;
+    max-height: 16px;
+    border-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    border-collapse: collapse;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+.znui-react-warning-message{
+    color: #e58701;
+    font-weight: 200;
+    font-size: 13px;
+}
 
 .znui-react-button {
     padding: 5px;
