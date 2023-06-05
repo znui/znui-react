@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "2.2.15",
+  "version": "2.2.16",
   "description": "znui react is the front-end basic framework.",
   "main": "index.js",
   "repository": {
@@ -33,7 +33,7 @@
     "@babel/core": "7.22.1",
     "@babel/preset-env": "7.22.4",
     "@babel/preset-react": "7.22.3",
-    "axios": "1.4.0",
+    "axios": "0.27.2",
     "babel-loader": "8.3.0",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "copy-webpack-plugin": "5.1.2",
