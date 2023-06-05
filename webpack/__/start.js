@@ -26,7 +26,8 @@ if(argv.contentBase) {
             disableHostCheck: true,
             hot: true,
             https: (new Boolean(argv.https)).valueOf() || false,
-            open: argv.browser || 'Google Chrome',
+            //open: argv.browser || 'Google Chrome',
+            open: true,
             openPage: _openPage,
             port: argv['port'] || 8181,
             historyApiFallback: {
