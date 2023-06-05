@@ -63,6 +63,20 @@ module.exports = znui.react = {
 
     return zn.date.nowDateString('-') + ' ' + _timestamp;
   },
+  dateToString: function dateToString(date) {
+    var _date = new Date(date);
+    /*
+    var _year = _date.getFullYear(), _
+    var _timestamp = timestamp || zn.date.nowTimeString();
+    var _versions = znui.react.versions();
+    if(!_versions.chrome && _versions.safari) {
+        return zn.date.nowDateString('-') + 'T' + _timestamp;
+    }
+    
+    return zn.date.nowDateString('-') + ' ' + _timestamp;
+    */
+
+  },
   arrayToValueMap: function arrayToValueMap(ary, valueKey, labelKey) {
     if (!zn.is(ary, 'array')) {
       throw new Error('data is not array.');
@@ -551,16 +565,20 @@ module.exports = znui.react = {
         }));
 
       case "string":
-        var _render = zn.path(window, argv);
+        if (argv.indexOf('.') != -1) {
+          var _render = zn.path(window, argv);
 
-        if (_render) {
-          return znui.react.createReactElement(_render, zn.deepAssigns({}, options));
+          if (_render) {
+            return znui.react.createReactElement(_render, zn.deepAssigns({}, options));
+          }
+
+          return _render;
         }
 
-        break;
+        return argv;
     }
 
-    return null;
+    return argv;
   },
   registerComponent: function registerComponent(key, args) {
     if (this[key]) {
