@@ -120,7 +120,8 @@ module.exports = {
         disableHostCheck: true,
         hot: (argv['hot'] !== false ? true : false),
         https: (argv['https'] !== false ? true : false),
-        open: 'Google Chrome',
+        //open: 'Google Chrome',
+        open: true,
         port: argv['port'] || 8181,
         openPage: _page,
         historyApiFallback: {
