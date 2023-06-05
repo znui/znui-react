@@ -1,6 +1,6 @@
 {
   "name": "znui-react",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "description": "znui react is the front-end basic framework.",
   "main": "index.js",
   "repository": {
@@ -59,9 +59,9 @@
     "terser-webpack-plugin": "^3.1.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^3.0.0",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
+    "webpack": "4.42.0",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "3.10.3",
     "znui": "^2.1.1"
   }
 }
