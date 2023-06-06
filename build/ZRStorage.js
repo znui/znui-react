@@ -1,7 +1,6 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 module.exports = zn.Class({
   events: ['init'],
   properties: {
@@ -18,23 +17,17 @@ module.exports = zn.Class({
       this._tokenKey = argv.tokenKey || 'znui.app.token';
       this._engine = argv.engine || 'localStorage';
       this._application = application;
-
       this.__initEngine(this._engine);
-
       this.fire('init', argv, application);
     },
     __initEngine: function __initEngine(engine) {
       if (!engine) {
         return false;
       }
-
       var _engine = engine || this._engine; // Cookie, sessionStorage, localStorage
-
-
       if (_engine && typeof _engine == 'string') {
         _engine = window[_engine];
       }
-
       return this._engine = _engine, _engine;
     },
     clear: function clear() {
@@ -64,13 +57,10 @@ module.exports = zn.Class({
     },
     getItem: function getItem(key, ifJSONParse) {
       key = this._prefix + (key || '');
-
       var _value = this.getEngine().getItem(key);
-
       if (ifJSONParse !== false) {
         ifJSONParse = true;
       }
-
       if (ifJSONParse && _value) {
         try {
           return JSON.parse(_value);
@@ -78,7 +68,6 @@ module.exports = zn.Class({
           return {};
         }
       }
-
       return _value;
     },
     removeItem: function removeItem(key) {
@@ -87,7 +76,6 @@ module.exports = zn.Class({
     },
     getJSONValue: function getJSONValue(value) {
       var _value = this.getItem(value);
-
       if (_value) {
         try {
           _value = JSON.parse(_value);
@@ -96,7 +84,6 @@ module.exports = zn.Class({
           console.error(e.stack);
         }
       }
-
       return _value;
     }
   }

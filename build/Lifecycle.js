@@ -1,25 +1,20 @@
 "use strict";
 
 var React = znui.React || require('react');
-
 module.exports = React.createClass({
   displayName: 'ZRLifecycle',
   getDefaultProps: function getDefaultProps() {
     var _props = {};
-
     if (this.props) {
       _props = this.props.getDefaultProps && this.props.getDefaultProps.apply(this, arguments);
     }
-
     return _props || {};
   },
   getInitialState: function getInitialState() {
     var _state = {};
-
     if (this.props) {
       _state = this.props.getInitialState && this.props.getInitialState.apply(this, arguments);
     }
-
     return _state || {};
   },
   componentDidMount: function componentDidMount() {

@@ -1,7 +1,9 @@
 "use strict";
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 var jwt = require('jsonwebtoken');
-
 module.exports = zn.Class({
   events: ['init'],
   properties: {
@@ -29,55 +31,37 @@ module.exports = zn.Class({
     },
     __initCookie: function __initCookie() {
       var _strs = (window.document.cookie || '').split(';'),
-          _temp = [],
-          _values = {};
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
+        _temp = [],
+        _values = {};
+      var _iterator = _createForOfIteratorHelper(_strs),
+        _step;
       try {
-        for (var _iterator = _strs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var str = _step.value;
-
           if (str) {
             _temp = str.split('=');
             _values[_temp[0]] = _temp[1];
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
-
       return _values;
     },
     fixRelativePath: function fixRelativePath(path) {
       if (!path) {
         return '';
       }
-
       var _relativePathPrefix = this._relativePathPrefix || '';
-
       if (path.indexOf(_relativePathPrefix) == -1) {
         path = _relativePathPrefix + path;
       }
-
       return path;
     },
     relativeURL: function relativeURL(path, argv) {
       var _argv = zn.querystring.stringify(argv);
-
       return '#' + this.fixRelativePath(path) + (_argv ? '?' + _argv : '');
     },
     relativeJump: function relativeJump(path, search, overwrite) {
@@ -87,21 +71,15 @@ module.exports = zn.Class({
       if (!path) {
         return this;
       }
-
       var _search = zn.extend({}, search);
-
       if (!overwrite) {
         zn.overwrite(_search, this._search);
       }
-
       if (!search) {
         this._search = {};
       }
-
       this._search = zn.overwrite(_search, this._search);
-
       var _querystring = zn.querystring.stringify(this._search);
-
       return location.hash = path + (_querystring ? '?' + _querystring : ''), this;
     },
     back: function back() {
@@ -129,7 +107,6 @@ module.exports = zn.Class({
       if (this._index) {
         location.hash = this._index;
       }
-
       return this;
     },
     setMain: function setMain(value) {
@@ -140,10 +117,8 @@ module.exports = zn.Class({
         if (data) {
           this.clear().set(data);
         }
-
         location.hash = this.fixRelativePath(this._main);
       }
-
       return this;
     },
     getPath: function getPath() {
@@ -153,7 +128,6 @@ module.exports = zn.Class({
       if (Date.now() / 1000 > value) {
         return true;
       }
-
       return false;
     },
     logout: function logout() {
@@ -162,49 +136,33 @@ module.exports = zn.Class({
     },
     getProfile: function getProfile(name) {
       var _token = this._cookies[name];
-
       if (_token) {
         return jwt.decode(_token);
       }
-
       return null;
     },
     validate: function validate() {
       var _data = {};
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
+      var _iterator2 = _createForOfIteratorHelper(this._tokens),
+        _step2;
       try {
-        for (var _iterator2 = this._tokens[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var key = _step2.value;
           if (!this._cookies[key]) return this.doIndex(), false;
-
           if (this._tokenType == 'jwt') {
             var _token = jwt.decode(this._cookies[key]);
-
             if (this.isJWTExpired(_token.exp)) {
               return this.doIndex(), false;
             }
-
             _data[key] = _token;
           } else {
             _data[key] = this._cookies[key];
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     }
   }

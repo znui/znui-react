@@ -13,8 +13,11 @@ if(!znui) {
 znui.React = React;
 znui.ReactDOM = ReactDOM;
 if(axios){
+    if(axios.defaults) {
+        axios.defaults.withCredentials = true;
+        axios.defaults.timeout = 20000;
+    }
     znui.axios = axios;
-    znui.axios.defaults.withCredentials = true;
     if(zn.data && zn.data.setCaller) zn.data.setCaller(axios);
 }
 
