@@ -43,7 +43,6 @@ module.exports = zn.Class({
           _container.style="transform: scale(" + _wRatio + ", " + _hRatio + "); transform-origin: left top;";
       });*/
     },
-
     __initConfig: function __initConfig(config) {
       if (config) {
         if (config.$development || config.$production || config.$stage) {
@@ -99,7 +98,7 @@ module.exports = zn.Class({
     },
     __render: function __render(view) {
       this.fire('render', view);
-      return ReactDOM.render( /*#__PURE__*/React.createElement(React.Fragment, null, this.__getRender(view), this.__getGlobalRender()), this.__getContainer()), this;
+      return ReactDOM.render(/*#__PURE__*/React.createElement(React.Fragment, null, this.__getRender(view), this.__getGlobalRender()), this.__getContainer()), this;
     },
     setValue: function setValue(key, value) {
       return this._data[key] = value, this;
