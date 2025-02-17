@@ -4,6 +4,7 @@ module.exports = React.createClass({
 	displayName:'ZRDataView',
 	getInitialState:function(){
 		return {
+			all_data: null,
 			data: null,
 			loading: false
 		}
@@ -19,8 +20,12 @@ module.exports = React.createClass({
 				if(!this.__isMounted){
 					return;
 				}
-				if((this.props.onLoading && this.props.onLoading(data, this)) === false) {
+				var _result = this.props.onLoading && this.props.onLoading(data, this);
+				if(_result === false) {
 					return;
+				}
+				if(zn.is(_result, 'object') || zn.is(_result, 'array')) {
+					data = _result;
 				}
 				this.setState({
 					loading: true
@@ -42,18 +47,28 @@ module.exports = React.createClass({
 					}
 				}
 
-				var _onLoaded = this.props.onLoaded || this.props.onFinished;
+				var _onLoaded = this.props.onLoaded;
 				if((_onLoaded && _onLoaded(_data, xhr, this)) === false) {
-					return;
+					return false;
 				}
 
 				if(zn.is(_data, 'object') && _data.code == 200 && zn.is(_data.result, 'array')){
 					_data = _data.result;
 				}
 				
+				var _dataHandler = this.props.dataHandler || this.props.onFinished;
+				var _result = _dataHandler && _dataHandler(_data, xhr, this);
+				if(_result === false){
+					return false;
+				}
+				if(zn.is(_result, 'object') || zn.is(_result, 'array')) {
+					_data = _result;
+				}
+				
 				this.setState({
 					loading: false,
-					data: _data
+					data: _data,
+					all_data: _data
 				});
 				_after && _after(sender, _data, xhr);
 			},
@@ -74,6 +89,15 @@ module.exports = React.createClass({
 			this._data.destroy();
 			this._data = null;
 		}
+	},
+	filter: function (filter, sort){
+		this.state.data = JSON.parse(JSON.stringify(this.state.all_data));
+		this.state.data = this.state.data.filter(filter, sort);
+		this.forceUpdate();
+	},
+	reset: function (){
+		this.state.data = this.state.all_data.slice();
+		this.forceUpdate();
 	},
 	__itemRender: function (item, index){
 		return this.props.itemRender && this.props.itemRender(item, index, this);

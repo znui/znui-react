@@ -16,6 +16,10 @@ var __ = {
             return node_path.join(_cwd, 'web', 'src');
         }
 
+        if(node_fs.existsSync(node_path.join(_cwd, 'web', 'src'))){
+            return node_path.join(_cwd, 'web', 'src');
+        }
+
         return _cwd;
     },
     getConfig: function (){

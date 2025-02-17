@@ -5,6 +5,7 @@ module.exports = React.createClass({
   displayName: 'ZRDataView',
   getInitialState: function getInitialState() {
     return {
+      all_data: null,
       data: null,
       loading: false
     };
@@ -21,8 +22,12 @@ module.exports = React.createClass({
         if (!_this.__isMounted) {
           return;
         }
-        if ((_this.props.onLoading && _this.props.onLoading(data, _this)) === false) {
+        var _result = _this.props.onLoading && _this.props.onLoading(data, _this);
+        if (_result === false) {
           return;
+        }
+        if (zn.is(_result, 'object') || zn.is(_result, 'array')) {
+          data = _result;
         }
         _this.setState({
           loading: true
@@ -43,16 +48,25 @@ module.exports = React.createClass({
             _data = _result;
           }
         }
-        var _onLoaded = _this.props.onLoaded || _this.props.onFinished;
+        var _onLoaded = _this.props.onLoaded;
         if ((_onLoaded && _onLoaded(_data, xhr, _this)) === false) {
-          return;
+          return false;
         }
         if (zn.is(_data, 'object') && _data.code == 200 && zn.is(_data.result, 'array')) {
           _data = _data.result;
         }
+        var _dataHandler = _this.props.dataHandler || _this.props.onFinished;
+        var _result = _dataHandler && _dataHandler(_data, xhr, _this);
+        if (_result === false) {
+          return false;
+        }
+        if (zn.is(_result, 'object') || zn.is(_result, 'array')) {
+          _data = _result;
+        }
         _this.setState({
           loading: false,
-          data: _data
+          data: _data,
+          all_data: _data
         });
         _after && _after(sender, _data, xhr);
       },
@@ -73,6 +87,15 @@ module.exports = React.createClass({
       this._data.destroy();
       this._data = null;
     }
+  },
+  filter: function filter(_filter, sort) {
+    this.state.data = JSON.parse(JSON.stringify(this.state.all_data));
+    this.state.data = this.state.data.filter(_filter, sort);
+    this.forceUpdate();
+  },
+  reset: function reset() {
+    this.state.data = this.state.all_data.slice();
+    this.forceUpdate();
   },
   __itemRender: function __itemRender(item, index) {
     return this.props.itemRender && this.props.itemRender(item, index, this);
